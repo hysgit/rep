@@ -17,6 +17,15 @@
     from item_name
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item_name;
+  </select>
+  <select id="getByTypeId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item_name
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item_name
     where id = #{id,jdbcType=INTEGER}

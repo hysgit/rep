@@ -1,5 +1,7 @@
 package com.woslx.rep.rep.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class ItemType {
@@ -7,8 +9,10 @@ public class ItemType {
 
     private String name;
 
+    @JSONField(serialize=false)
     private Date createTime;
 
+    @JSONField(serialize=false)
     private Date updateTime;
 
     public Integer getId() {

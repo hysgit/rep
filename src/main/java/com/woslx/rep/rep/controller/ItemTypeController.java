@@ -119,7 +119,15 @@ public class ItemTypeController extends BaseController {
     {
         ApiResult<List<ItemType>> apiResult = new ApiResult<>(0, Constants.SUCCESS);
         List<ItemType> list = itemTypeService.getAll();
-        apiResult.setData(list);
+
+        if (list.size() == 0) {
+            apiResult.setCode(2);
+            apiResult.setMessage("查询结果为空");
+        }
+        else {
+            apiResult.setData(list);
+        }
+
         return apiResult.toString();
     }
 }

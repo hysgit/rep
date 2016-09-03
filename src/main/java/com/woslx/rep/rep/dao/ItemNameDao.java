@@ -2,6 +2,8 @@ package com.woslx.rep.rep.dao;
 
 import com.woslx.rep.rep.entity.ItemName;
 
+import java.util.List;
+
 public interface ItemNameDao {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,8 @@ public interface ItemNameDao {
     int updateByPrimaryKeySelective(ItemName record);
 
     int updateByPrimaryKey(ItemName record);
+
+    List<ItemName> getAll();
+
+    List<ItemName> getByTypeId(Integer typeId);
 }

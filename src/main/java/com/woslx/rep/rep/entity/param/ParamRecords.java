@@ -1,10 +1,11 @@
-package com.woslx.rep.rep.entity;
-
-import com.alibaba.fastjson.annotation.JSONField;
+package com.woslx.rep.rep.entity.param;
 
 import java.util.Date;
 
-public class Records {
+/**
+ * Created by hy on 9/4/16.
+ */
+public class ParamRecords {
     private Integer id;
 
     private Integer itemId;
@@ -24,12 +25,6 @@ public class Records {
     private String imgUrl;
 
     private Integer state;
-
-    @JSONField(serialize=false)
-    private Date createTime;
-
-    @JSONField(serialize=false)
-    private Date updateTime;
 
     public Integer getId() {
         return id;
@@ -68,7 +63,7 @@ public class Records {
     }
 
     public void setActionDesc(String actionDesc) {
-        this.actionDesc = actionDesc == null ? null : actionDesc.trim();
+        this.actionDesc = actionDesc;
     }
 
     public String getSrcOrDst() {
@@ -76,7 +71,7 @@ public class Records {
     }
 
     public void setSrcOrDst(String srcOrDst) {
-        this.srcOrDst = srcOrDst == null ? null : srcOrDst.trim();
+        this.srcOrDst = srcOrDst;
     }
 
     public Integer getQuantity() {
@@ -100,7 +95,7 @@ public class Records {
     }
 
     public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl == null ? null : imgUrl.trim();
+        this.imgUrl = imgUrl;
     }
 
     public Integer getState() {
@@ -109,21 +104,5 @@ public class Records {
 
     public void setState(Integer state) {
         this.state = state;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

@@ -3,15 +3,21 @@
 <mapper namespace="com.woslx.rep.rep.dao.ItemDao" >
   <resultMap id="BaseResultMap" type="com.woslx.rep.rep.entity.Item" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
     <result column="name_id" property="nameId" jdbcType="INTEGER" />
     <result column="serial_number" property="serialNumber" jdbcType="VARCHAR" />
     <result column="specifications" property="specifications" jdbcType="VARCHAR" />
+    <result column="quantity_all" property="quantityAll" jdbcType="INTEGER" />
+    <result column="quantity_use" property="quantityUse" jdbcType="INTEGER" />
+    <result column="quantity_current" property="quantityCurrent" jdbcType="INTEGER" />
     <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name_id, serial_number, specifications, company, create_time, update_time
+    id, type_id, name_id, serial_number, specifications, quantity_all, quantity_use, 
+    quantity_current, company, state, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -19,23 +25,41 @@
     from item
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByTypeId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item
+    where type_id=#{typeId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByNameId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item
+    where name_id=#{nameId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.woslx.rep.rep.entity.Item" >
-    insert into item (id, name_id, serial_number, 
-      specifications, company, create_time, 
-      update_time)
-    values (#{id,jdbcType=INTEGER}, #{nameId,jdbcType=INTEGER}, #{serialNumber,jdbcType=VARCHAR}, 
-      #{specifications,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into item (id, type_id, name_id, 
+      serial_number, specifications, quantity_all, 
+      quantity_use, quantity_current, company, 
+      state, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{nameId,jdbcType=INTEGER}, 
+      #{serialNumber,jdbcType=VARCHAR}, #{specifications,jdbcType=VARCHAR}, #{quantityAll,jdbcType=INTEGER}, 
+      #{quantityUse,jdbcType=INTEGER}, #{quantityCurrent,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.woslx.rep.rep.entity.Item" >
     insert into item
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="typeId != null" >
+        type_id,
       </if>
       <if test="nameId != null" >
         name_id,
@@ -46,8 +70,20 @@
       <if test="specifications != null" >
         specifications,
       </if>
+      <if test="quantityAll != null" >
+        quantity_all,
+      </if>
+      <if test="quantityUse != null" >
+        quantity_use,
+      </if>
+      <if test="quantityCurrent != null" >
+        quantity_current,
+      </if>
       <if test="company != null" >
         company,
+      </if>
+      <if test="state != null" >
+        state,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -60,6 +96,9 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
       <if test="nameId != null" >
         #{nameId,jdbcType=INTEGER},
       </if>
@@ -69,8 +108,20 @@
       <if test="specifications != null" >
         #{specifications,jdbcType=VARCHAR},
       </if>
+      <if test="quantityAll != null" >
+        #{quantityAll,jdbcType=INTEGER},
+      </if>
+      <if test="quantityUse != null" >
+        #{quantityUse,jdbcType=INTEGER},
+      </if>
+      <if test="quantityCurrent != null" >
+        #{quantityCurrent,jdbcType=INTEGER},
+      </if>
       <if test="company != null" >
         #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -83,6 +134,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.woslx.rep.rep.entity.Item" >
     update item
     <set >
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
       <if test="nameId != null" >
         name_id = #{nameId,jdbcType=INTEGER},
       </if>
@@ -92,8 +146,20 @@
       <if test="specifications != null" >
         specifications = #{specifications,jdbcType=VARCHAR},
       </if>
+      <if test="quantityAll != null" >
+        quantity_all = #{quantityAll,jdbcType=INTEGER},
+      </if>
+      <if test="quantityUse != null" >
+        quantity_use = #{quantityUse,jdbcType=INTEGER},
+      </if>
+      <if test="quantityCurrent != null" >
+        quantity_current = #{quantityCurrent,jdbcType=INTEGER},
+      </if>
       <if test="company != null" >
         company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -106,10 +172,15 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.woslx.rep.rep.entity.Item" >
     update item
-    set name_id = #{nameId,jdbcType=INTEGER},
+    set type_id = #{typeId,jdbcType=INTEGER},
+      name_id = #{nameId,jdbcType=INTEGER},
       serial_number = #{serialNumber,jdbcType=VARCHAR},
       specifications = #{specifications,jdbcType=VARCHAR},
+      quantity_all = #{quantityAll,jdbcType=INTEGER},
+      quantity_use = #{quantityUse,jdbcType=INTEGER},
+      quantity_current = #{quantityCurrent,jdbcType=INTEGER},
       company = #{company,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

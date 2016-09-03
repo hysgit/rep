@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+        <property name="resultSetLogEnabled" value="false"/>
+        <property name="dataSourceLogEnabled" value="false"/>
+        <property name="connectionLogEnabled" value="false"/>
+        <property name="statementExecutableSqlLogEnable" value="true"/>
+    </bean>
+
+    <!-- data source -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <property name="driverClassName" value="${rep.driver}"/>
+        <property name="url" value="${rep.url}"/>
+        <property name="username" value="${rep.username}"/>
+        <property name="password" value="${rep.password}"/>
+
+        <!-- Connection Pooling Info -->
+        <property name="maxWait" value="${rep.maxWait}"/>
+        <property name="initialSize" value="${rep.initialSize}"/>
+        <property name="maxActive" value="${rep.maxActive}"/>
+        <property name="minIdle" value="${rep.minIdle}"/>
+        <property name="defaultAutoCommit" value="${rep.defaultAutoCommit}"/>
+        <property name="timeBetweenEvictionRunsMillis"
+                  value="${rep.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${rep.minEvictableIdleTimeMillis}"/>
+        <property name="removeAbandoned" value="${rep.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${rep.removeAbandonedTimeout}"/>
+        <property name="logAbandoned" value="${rep.logAbandoned}"/>
+        <property name="testWhileIdle" value="${rep.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${rep.testOnBorrow}"/>
+        <property name="testOnReturn" value="${rep.testOnReturn}"/>
+        <property name="validationQuery" value="${rep.validationQuery}"/>
+        <property name="proxyFilters">
+            <list>
+                <ref bean="log-filter"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- session factory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis/app-mybatis.xml"/>
+        <property name="mapperLocations" value="classpath*:mapper/**/*.xml"/>
+    </bean>
+
+
+    <!-- mapper interface -->
+    <!-- for user database -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.woslx.rep.rep.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+    <!-- transaction support-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="txManager"/>
+</beans>

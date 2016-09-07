@@ -5,6 +5,7 @@ import com.woslx.rep.common.ApiResult;
 import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.param.ParamRecords;
+import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
 import com.woslx.rep.rep.service.RecordsService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -57,5 +58,19 @@ public class RecordsController {
 
         return apiResult.toString();
     }
+
+    @RequestMapping(value = "/query",
+            consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String query(@RequestBody ParamRecordsQueryCondition paramRecordsQueryCondition) {
+        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+
+
+
+        return apiResult.toString();
+    }
+
+
 
 }

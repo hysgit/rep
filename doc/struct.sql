@@ -48,6 +48,8 @@ create table if not exists records
 (
   id int not null auto_increment,
   item_id int not null comment '商品id',
+  item_name_id int not null comment '商品名称id',
+  item_type_id int not null comment '商品类型id',
   action_type int not null comment '1: 出库,2:入库',
   action_detail int not null comment '入库, 1. 原始库存入库; 2:补货; 3: 调货. 出库, 101: 手术; 102: 报废; 103: 遗失',
   action_desc varchar(300) comment '备注',

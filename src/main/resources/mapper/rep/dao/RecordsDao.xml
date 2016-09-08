@@ -1,167 +1,220 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.woslx.rep.rep.dao.RecordsDao" >
-  <resultMap id="BaseResultMap" type="com.woslx.rep.rep.entity.Records" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="item_id" property="itemId" jdbcType="INTEGER" />
-    <result column="action_type" property="actionType" jdbcType="INTEGER" />
-    <result column="action_detail" property="actionDetail" jdbcType="INTEGER" />
-    <result column="action_desc" property="actionDesc" jdbcType="VARCHAR" />
-    <result column="src_or_dst" property="srcOrDst" jdbcType="VARCHAR" />
-    <result column="quantity" property="quantity" jdbcType="INTEGER" />
-    <result column="time" property="time" jdbcType="TIMESTAMP" />
-    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
-    <result column="state" property="state" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, item_id, action_type, action_detail, action_desc, src_or_dst, quantity, time, 
-    img_url, state, create_time, update_time
+<mapper namespace="com.woslx.rep.rep.dao.RecordsDao">
+    <resultMap id="BaseResultMap" type="com.woslx.rep.rep.entity.Records">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="item_id" property="itemId" jdbcType="INTEGER"/>
+        <result column="item_name_id" property="itemNameId" jdbcType="INTEGER"/>
+        <result column="item_type_id" property="itemTypeId" jdbcType="INTEGER"/>
+        <result column="action_type" property="actionType" jdbcType="INTEGER"/>
+        <result column="action_detail" property="actionDetail" jdbcType="INTEGER"/>
+        <result column="action_desc" property="actionDesc" jdbcType="VARCHAR"/>
+        <result column="src_or_dst" property="srcOrDst" jdbcType="VARCHAR"/>
+        <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, item_id, item_name_id, item_type_id, action_type, action_detail, action_desc, 
+    src_or_dst, quantity, time, img_url, state, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from records
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from records
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getBySettedCondition" resultMap="BaseResultMap"
+            parameterType="com.woslx.rep.rep.entity.RecordsQueryCondition">
+        select
+        <include refid="Base_Column_List"/>
+        from records
+        where
+            state = 1
+            <if test="itemId != null">
+                and item_id = #{itemId,jdbcType=INTEGER}
+            </if>
+            <if test="itemTypeId != null">
+                and item_type_id = #{itemTypeId,jdbcType=INTEGER}
+            </if>
+
+            <if test="itemNameId != null">
+                and item_name_id = #{itemNameId,jdbcType=INTEGER}
+            </if>
+
+            <if test="actionType != null">
+                and action_type = #{actionType,jdbcType=INTEGER}
+            </if>
+
+            <if test="startTime != null">
+                and unix_timestamp(`time`) >= unix_timestamp(#{startTime,jdbcType=VARCHAR})
+            </if>
+
+            <if test="endTime != null">
+                and unix_timestamp(`time`) &lt; unix_timestamp(#{endTime,jdbcType=VARCHAR})
+            </if>
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from records
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.woslx.rep.rep.entity.Records" >
-    insert into records (id, item_id, action_type, 
-      action_detail, action_desc, src_or_dst, 
-      quantity, time, img_url, 
-      state, create_time, update_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{actionType,jdbcType=INTEGER}, 
-      #{actionDetail,jdbcType=INTEGER}, #{actionDesc,jdbcType=VARCHAR}, #{srcOrDst,jdbcType=VARCHAR}, 
-      #{quantity,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    <insert id="insert" parameterType="com.woslx.rep.rep.entity.Records">
+    insert into records (id, item_id, item_name_id, 
+      item_type_id, action_type, action_detail, 
+      action_desc, src_or_dst, quantity, 
+      time, img_url, state, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{itemNameId,jdbcType=INTEGER}, 
+      #{itemTypeId,jdbcType=INTEGER}, #{actionType,jdbcType=INTEGER}, #{actionDetail,jdbcType=INTEGER}, 
+      #{actionDesc,jdbcType=VARCHAR}, #{srcOrDst,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, 
+      #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.woslx.rep.rep.entity.Records" >
-    insert into records
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="itemId != null" >
-        item_id,
-      </if>
-      <if test="actionType != null" >
-        action_type,
-      </if>
-      <if test="actionDetail != null" >
-        action_detail,
-      </if>
-      <if test="actionDesc != null" >
-        action_desc,
-      </if>
-      <if test="srcOrDst != null" >
-        src_or_dst,
-      </if>
-      <if test="quantity != null" >
-        quantity,
-      </if>
-      <if test="time != null" >
-        time,
-      </if>
-      <if test="imgUrl != null" >
-        img_url,
-      </if>
-      <if test="state != null" >
-        state,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="itemId != null" >
-        #{itemId,jdbcType=INTEGER},
-      </if>
-      <if test="actionType != null" >
-        #{actionType,jdbcType=INTEGER},
-      </if>
-      <if test="actionDetail != null" >
-        #{actionDetail,jdbcType=INTEGER},
-      </if>
-      <if test="actionDesc != null" >
-        #{actionDesc,jdbcType=VARCHAR},
-      </if>
-      <if test="srcOrDst != null" >
-        #{srcOrDst,jdbcType=VARCHAR},
-      </if>
-      <if test="quantity != null" >
-        #{quantity,jdbcType=INTEGER},
-      </if>
-      <if test="time != null" >
-        #{time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="imgUrl != null" >
-        #{imgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null" >
-        #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.woslx.rep.rep.entity.Records" >
-    update records
-    <set >
-      <if test="itemId != null" >
-        item_id = #{itemId,jdbcType=INTEGER},
-      </if>
-      <if test="actionType != null" >
-        action_type = #{actionType,jdbcType=INTEGER},
-      </if>
-      <if test="actionDetail != null" >
-        action_detail = #{actionDetail,jdbcType=INTEGER},
-      </if>
-      <if test="actionDesc != null" >
-        action_desc = #{actionDesc,jdbcType=VARCHAR},
-      </if>
-      <if test="srcOrDst != null" >
-        src_or_dst = #{srcOrDst,jdbcType=VARCHAR},
-      </if>
-      <if test="quantity != null" >
-        quantity = #{quantity,jdbcType=INTEGER},
-      </if>
-      <if test="time != null" >
-        time = #{time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="imgUrl != null" >
-        img_url = #{imgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null" >
-        state = #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.woslx.rep.rep.entity.Records" >
+    <insert id="insertSelective" parameterType="com.woslx.rep.rep.entity.Records">
+        insert into records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="itemId != null">
+                item_id,
+            </if>
+            <if test="itemNameId != null">
+                item_name_id,
+            </if>
+            <if test="itemTypeId != null">
+                item_type_id,
+            </if>
+            <if test="actionType != null">
+                action_type,
+            </if>
+            <if test="actionDetail != null">
+                action_detail,
+            </if>
+            <if test="actionDesc != null">
+                action_desc,
+            </if>
+            <if test="srcOrDst != null">
+                src_or_dst,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="itemId != null">
+                #{itemId,jdbcType=INTEGER},
+            </if>
+            <if test="itemNameId != null">
+                #{itemNameId,jdbcType=INTEGER},
+            </if>
+            <if test="itemTypeId != null">
+                #{itemTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="actionType != null">
+                #{actionType,jdbcType=INTEGER},
+            </if>
+            <if test="actionDetail != null">
+                #{actionDetail,jdbcType=INTEGER},
+            </if>
+            <if test="actionDesc != null">
+                #{actionDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="srcOrDst != null">
+                #{srcOrDst,jdbcType=VARCHAR},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="time != null">
+                #{time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.woslx.rep.rep.entity.Records">
+        update records
+        <set>
+            <if test="itemId != null">
+                item_id = #{itemId,jdbcType=INTEGER},
+            </if>
+            <if test="itemNameId != null">
+                item_name_id = #{itemNameId,jdbcType=INTEGER},
+            </if>
+            <if test="itemTypeId != null">
+                item_type_id = #{itemTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="actionType != null">
+                action_type = #{actionType,jdbcType=INTEGER},
+            </if>
+            <if test="actionDetail != null">
+                action_detail = #{actionDetail,jdbcType=INTEGER},
+            </if>
+            <if test="actionDesc != null">
+                action_desc = #{actionDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="srcOrDst != null">
+                src_or_dst = #{srcOrDst,jdbcType=VARCHAR},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.woslx.rep.rep.entity.Records">
     update records
     set item_id = #{itemId,jdbcType=INTEGER},
+      item_name_id = #{itemNameId,jdbcType=INTEGER},
+      item_type_id = #{itemTypeId,jdbcType=INTEGER},
       action_type = #{actionType,jdbcType=INTEGER},
       action_detail = #{actionDetail,jdbcType=INTEGER},
       action_desc = #{actionDesc,jdbcType=VARCHAR},

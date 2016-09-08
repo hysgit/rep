@@ -19,4 +19,5 @@ public interface ItemTypeDao {
 
     List<ItemType> getAll();
 
+    List<ItemType> getByName(String name);
 }

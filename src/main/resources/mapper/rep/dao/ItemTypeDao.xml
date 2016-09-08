@@ -18,7 +18,12 @@
   </select>
   <select id="getAll" resultType="com.woslx.rep.rep.entity.ItemType">
     select <include refid="Base_Column_List"/>
-    from item_type;
+    from item_type
+  </select>
+  <select id="getByName" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item_type
+    where name=#{name,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item_type

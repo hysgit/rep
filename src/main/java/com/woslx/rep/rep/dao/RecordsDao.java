@@ -1,6 +1,10 @@
 package com.woslx.rep.rep.dao;
 
 import com.woslx.rep.rep.entity.Records;
+import com.woslx.rep.rep.entity.RecordsQueryCondition;
+import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
+
+import java.util.List;
 
 public interface RecordsDao {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +18,6 @@ public interface RecordsDao {
     int updateByPrimaryKeySelective(Records record);
 
     int updateByPrimaryKey(Records record);
+
+    List<Records> getBySettedCondition(RecordsQueryCondition condition);
 }

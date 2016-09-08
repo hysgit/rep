@@ -41,9 +41,13 @@ public class ItemTypeController extends BaseController {
     @ResponseBody
     public String create(@RequestBody ParamItemType paramItemType){
         ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
-
+        String name = paramItemType.getName().trim();
+        List<ItemType> list = itemTypeService.getByName(name);
+        if (list.size() != 0) {
+            throw new ApiException(1, "该名称的类型已经存在");
+        }
         ItemType itemType = new ItemType();
-        itemType.setName(paramItemType.getName());
+        itemType.setName(name);
         Date now = new Date();
         itemType.setCreateTime(now);
         itemType.setUpdateTime(now);
@@ -75,8 +79,12 @@ public class ItemTypeController extends BaseController {
         {
             throw new ApiException(1, "不存在的ItemType");
         }
-
-        itemType.setName(paramItemType.getName());
+        String name = paramItemType.getName().trim();
+        List<ItemType> list = itemTypeService.getByName(name);
+        if (list.size() != 0) {
+            throw new ApiException(1, "该名称的类型已经存在");
+        }
+        itemType.setName(name);
         itemType.setUpdateTime(new Date());
 
 

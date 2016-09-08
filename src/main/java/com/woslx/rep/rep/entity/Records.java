@@ -1,13 +1,15 @@
 package com.woslx.rep.rep.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import java.util.Date;
 
 public class Records {
     private Integer id;
 
     private Integer itemId;
+
+    private Integer itemNameId;
+
+    private Integer itemTypeId;
 
     private Integer actionType;
 
@@ -25,10 +27,8 @@ public class Records {
 
     private Integer state;
 
-    @JSONField(serialize=false)
     private Date createTime;
 
-    @JSONField(serialize=false)
     private Date updateTime;
 
     public Integer getId() {
@@ -45,6 +45,22 @@ public class Records {
 
     public void setItemId(Integer itemId) {
         this.itemId = itemId;
+    }
+
+    public Integer getItemNameId() {
+        return itemNameId;
+    }
+
+    public void setItemNameId(Integer itemNameId) {
+        this.itemNameId = itemNameId;
+    }
+
+    public Integer getItemTypeId() {
+        return itemTypeId;
+    }
+
+    public void setItemTypeId(Integer itemTypeId) {
+        this.itemTypeId = itemTypeId;
     }
 
     public Integer getActionType() {

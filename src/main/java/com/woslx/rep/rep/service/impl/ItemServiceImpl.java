@@ -41,4 +41,9 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getByNameId(Integer nameId) {
         return itemDao.selectByNameId(nameId);
     }
+
+    @Override
+    public List<Item> getAll() {
+        return itemDao.getAll();
+    }
 }

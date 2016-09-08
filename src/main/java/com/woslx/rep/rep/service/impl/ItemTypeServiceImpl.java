@@ -42,4 +42,9 @@ public class ItemTypeServiceImpl implements ItemTypeService {
     public List<ItemType> getAll() {
         return itemTypeDao.getAll();
     }
+
+    @Override
+    public List<ItemType> getByName(String name) {
+        return itemTypeDao.getByName(name);
+    }
 }

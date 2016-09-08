@@ -18,7 +18,7 @@ public class ParamRecords {
 
     private String srcOrDst;
 
-    private Integer quantity;
+    private String quantity;
 
     private Date time;
 
@@ -74,11 +74,11 @@ public class ParamRecords {
         this.srcOrDst = srcOrDst;
     }
 
-    public Integer getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

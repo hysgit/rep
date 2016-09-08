@@ -15,4 +15,6 @@ public interface ItemTypeService {
     void update(ItemType itemType);
 
     List<ItemType> getAll();
+
+    List<ItemType> getByName(String name);
 }

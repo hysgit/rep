@@ -20,4 +20,6 @@ public interface ItemDao {
     List<Item> selectByTypeId(Integer typeId);
 
     List<Item> selectByNameId(Integer nameId);
+
+    List<Item> getAll();
 }

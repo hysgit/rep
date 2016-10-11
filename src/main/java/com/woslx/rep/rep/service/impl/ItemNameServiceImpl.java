@@ -45,4 +45,10 @@ public class ItemNameServiceImpl implements ItemNameService {
     public List<ItemName> getByTypeId(Integer typeId) {
         return itemNameDao.getByTypeId(typeId);
     }
+
+    @Override
+    public ItemName getByName(String name) {
+
+        return itemNameDao.getByName(name);
+    }
 }

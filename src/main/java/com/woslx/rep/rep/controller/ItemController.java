@@ -6,6 +6,7 @@ import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.param.ParamItem;
 import com.woslx.rep.rep.service.ItemService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,13 @@ public class ItemController {
     public String create(@RequestBody ParamItem paramItem) {
         ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 
+        Item item = itemService.getBySerialNumber(paramItem.getSerialNumber());
+        if (item != null) {
+            apiResult.setCode(1);
+            apiResult.setMessage(Constants.EXISTS);
+            return apiResult.toString();
+        }
+
         try {
             itemService.insert(createItem(paramItem));
         } catch (Exception e) {
@@ -60,6 +68,14 @@ public class ItemController {
         item.setCompany(paramItem.getCompany());
         item.setSerialNumber(paramItem.getSerialNumber());
         item.setSpecifications(paramItem.getSpecifications());
+        if(StringUtils.isEmpty(paramItem.getCompany()))
+        {
+            item.setCompany("");
+        }
+        else {
+            item.setCompany(paramItem.getCompany());
+        }
+        item.setPrice(paramItem.getPrice());
         item.setQuantityAll(0);
         item.setQuantityCurrent(0);
         item.setQuantityUse(0);

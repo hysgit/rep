@@ -19,4 +19,5 @@ public interface ItemNameService {
 
     List<ItemName> getByTypeId(Integer typeId);
 
+    ItemName getByName(String name);
 }

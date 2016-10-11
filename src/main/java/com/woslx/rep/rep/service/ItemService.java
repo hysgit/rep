@@ -20,4 +20,6 @@ public interface ItemService {
     List<Item> getByNameId(Integer nameId);
 
     List<Item> getAll();
+
+    Item getBySerialNumber(String serialNumber);
 }

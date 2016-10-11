@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>添加商品名称</title>
+    <link href="css/bootstrap.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/preset.css">
+    <link/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<h2>出入库管理系统</h2>
+<p></p>
+<ul class="nav nav-pills" role="tablist">
+    <li role="presentation"><a href="index.html">查询库存</a></li>
+    <li role="presentation"><a href="detail.html">商品详情</a></li>
+    <li role="presentation"><a href="ruku.html">新增入库</a></li>
+    <li role="presentation"><a href="out.html">新增出库</a></li>
+    <li role="presentation" class="active"><a href="#">添加名称</a></li>
+    <li role="presentation"><a href="additem.html">添加条目</a>
+</ul>
+<p></p>
+<form  role="form" action="javascript:void(0);">
+    <div class="form-group form-inline">
+        <label for="itemTypeId">请选择商品类型:</label>
+        <select id="itemTypeId" class="form-control" name="itemTypeId">
+            <option value="1">脊柱</option>
+            <option value="2">创伤</option>
+        </select>
+    </div>
+
+    <div class="form-group  form-inline">
+        <label for="itemName">请输入商品名称: </label>
+        <input type="text" class="form-control" id="itemName" name="itemName">
+    </div>
+
+    <input id="btnSave" type="button" class="btn btn-default" value="保存"/>
+</form>
+
+<script>
+    $(function(){
+
+        $("#btnSave").click(function(event){
+            console.log(event);
+            event.preventDefault();
+            var itemTypeId = $("#itemTypeId").val();
+            var itemName = $("#itemName").val();
+            if(itemName==null)
+            {
+                alert("商品名称不能为空");
+                return;
+            }
+            $("#btnSave").attr({"disabled":"disabled"});
+
+            var obj = {
+                "typeId":itemTypeId,
+                "name":itemName
+            };
+            console.log(JSON.stringify(obj));
+            $.ajax({
+                type: "POST",//请求方式，get或post
+                url: "/item/name/create",
+                data: JSON.stringify(obj),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                timeout: 15000,  //超时时间设置，单位毫秒
+                error: function (XmlHttpRequest, textStatus, errorThrown) {
+                    $("#btnSave").removeAttr("disabled");
+                    alert('系统繁忙,请稍后再试');
+                },
+                success: function (data) {
+                    $("#btnSave").removeAttr("disabled");
+                    if (0 == data.code) {
+                        alert("添加成功");
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>

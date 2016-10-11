@@ -46,4 +46,9 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getAll() {
         return itemDao.getAll();
     }
+
+    @Override
+    public Item getBySerialNumber(String serialNumber) {
+        return itemDao.getBySerialNumber(serialNumber);
+    }
 }

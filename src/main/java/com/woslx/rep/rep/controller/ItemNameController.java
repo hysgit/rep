@@ -43,6 +43,15 @@ public class ItemNameController {
     public String create(@RequestBody ParamItemName paramItemName) {
         ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 
+
+        String name = paramItemName.getName().trim();
+        ItemName itemNameTemp = itemNameService.getByName(name);
+        if (itemNameTemp != null) {
+            apiResult.setCode(1);
+            apiResult.setMessage(Constants.EXISTS);
+            return apiResult.toString();
+        }
+
         ItemName itemName = new ItemName();
         itemName.setName(paramItemName.getName());
         itemName.setTypeId(paramItemName.getTypeId());

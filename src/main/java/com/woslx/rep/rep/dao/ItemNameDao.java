@@ -20,4 +20,6 @@ public interface ItemNameDao {
     List<ItemName> getAll();
 
     List<ItemName> getByTypeId(Integer typeId);
+
+    ItemName getByName(String name);
 }

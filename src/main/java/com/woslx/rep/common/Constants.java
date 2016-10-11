@@ -7,4 +7,5 @@ public class Constants {
 
     public static final String SUCCESS = "success";
     public static final String FAIL = "fail";
+    public static final String EXISTS = "已经存在!";
 }

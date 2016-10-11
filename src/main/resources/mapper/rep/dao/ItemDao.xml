@@ -26,6 +26,28 @@
     from item
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <select id="selectByTypeId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item
+    where type_id=#{typeId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByNameId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item
+    where name_id=#{nameId,jdbcType=INTEGER}
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item
+  </select>
+  <select id="getBySerialNumber" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item
+    where serial_number=#{serialNumber,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item
     where id = #{id,jdbcType=INTEGER}

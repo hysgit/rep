@@ -26,6 +26,13 @@
     from item_name
     where type_id = #{typeId,jdbcType=INTEGER}
   </select>
+
+  <select id="getByName" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from item_name
+    where name=#{name,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item_name
     where id = #{id,jdbcType=INTEGER}

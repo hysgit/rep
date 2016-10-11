@@ -21,6 +21,8 @@ public class Item {
 
     private String company;
 
+    private Integer price;
+
     private Integer state;
 
     private Date createTime;
@@ -97,6 +99,14 @@ public class Item {
 
     public void setCompany(String company) {
         this.company = company == null ? null : company.trim();
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public Integer getState() {

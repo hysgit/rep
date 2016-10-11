@@ -2,6 +2,7 @@ package com.woslx.rep.rep.controller;
 
 import com.woslx.rep.common.ApiException;
 import com.woslx.rep.common.ApiResult;
+import com.woslx.rep.common.BaseController;
 import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.Records;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/records")
-public class RecordsController {
+public class RecordsController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(RecordsController.class);
 
@@ -196,6 +197,4 @@ public class RecordsController {
 
         return apiResult.toString();
     }
-
-
 }

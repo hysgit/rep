@@ -2,7 +2,6 @@ package com.woslx.rep.rep.dao;
 
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
-import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
 
 import java.util.List;
 

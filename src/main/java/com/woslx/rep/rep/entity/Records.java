@@ -15,17 +15,33 @@ public class Records {
 
     private Integer actionDetail;
 
-    private String actionDesc;
-
     private String srcOrDst;
 
     private Integer quantity;
+
+    private Integer price;
+
+    private Integer pricePutIn;
+
+    private Integer allPrice;
+
+    private Integer allPricePutIn;
 
     private Date time;
 
     private String imgUrl;
 
+    private String docterName;
+
+    private String gentaiName;
+
+    private String patientName;
+
+    private String zhuyuanNo;
+
     private Integer state;
+
+    private String actionDesc;
 
     private Date createTime;
 
@@ -79,14 +95,6 @@ public class Records {
         this.actionDetail = actionDetail;
     }
 
-    public String getActionDesc() {
-        return actionDesc;
-    }
-
-    public void setActionDesc(String actionDesc) {
-        this.actionDesc = actionDesc == null ? null : actionDesc.trim();
-    }
-
     public String getSrcOrDst() {
         return srcOrDst;
     }
@@ -101,6 +109,38 @@ public class Records {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Integer getPricePutIn() {
+        return pricePutIn;
+    }
+
+    public void setPricePutIn(Integer pricePutIn) {
+        this.pricePutIn = pricePutIn;
+    }
+
+    public Integer getAllPrice() {
+        return allPrice;
+    }
+
+    public void setAllPrice(Integer allPrice) {
+        this.allPrice = allPrice;
+    }
+
+    public Integer getAllPricePutIn() {
+        return allPricePutIn;
+    }
+
+    public void setAllPricePutIn(Integer allPricePutIn) {
+        this.allPricePutIn = allPricePutIn;
     }
 
     public Date getTime() {
@@ -119,12 +159,52 @@ public class Records {
         this.imgUrl = imgUrl == null ? null : imgUrl.trim();
     }
 
+    public String getDocterName() {
+        return docterName;
+    }
+
+    public void setDocterName(String docterName) {
+        this.docterName = docterName == null ? null : docterName.trim();
+    }
+
+    public String getGentaiName() {
+        return gentaiName;
+    }
+
+    public void setGentaiName(String gentaiName) {
+        this.gentaiName = gentaiName == null ? null : gentaiName.trim();
+    }
+
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName == null ? null : patientName.trim();
+    }
+
+    public String getZhuyuanNo() {
+        return zhuyuanNo;
+    }
+
+    public void setZhuyuanNo(String zhuyuanNo) {
+        this.zhuyuanNo = zhuyuanNo == null ? null : zhuyuanNo.trim();
+    }
+
     public Integer getState() {
         return state;
     }
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getActionDesc() {
+        return actionDesc;
+    }
+
+    public void setActionDesc(String actionDesc) {
+        this.actionDesc = actionDesc == null ? null : actionDesc.trim();
     }
 
     public Date getCreateTime() {

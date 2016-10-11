@@ -8,18 +8,27 @@
         <result column="item_type_id" property="itemTypeId" jdbcType="INTEGER"/>
         <result column="action_type" property="actionType" jdbcType="INTEGER"/>
         <result column="action_detail" property="actionDetail" jdbcType="INTEGER"/>
-        <result column="action_desc" property="actionDesc" jdbcType="VARCHAR"/>
         <result column="src_or_dst" property="srcOrDst" jdbcType="VARCHAR"/>
         <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="price_put_in" property="pricePutIn" jdbcType="INTEGER"/>
+        <result column="all_price" property="allPrice" jdbcType="INTEGER"/>
+        <result column="all_price_put_in" property="allPricePutIn" jdbcType="INTEGER"/>
         <result column="time" property="time" jdbcType="TIMESTAMP"/>
         <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+        <result column="docter_name" property="docterName" jdbcType="VARCHAR"/>
+        <result column="gentai_name" property="gentaiName" jdbcType="VARCHAR"/>
+        <result column="patient_name" property="patientName" jdbcType="VARCHAR"/>
+        <result column="zhuyuan_no" property="zhuyuanNo" jdbcType="VARCHAR"/>
         <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="action_desc" property="actionDesc" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, item_id, item_name_id, item_type_id, action_type, action_detail, action_desc, 
-    src_or_dst, quantity, time, img_url, state, create_time, update_time
+    id, item_id, item_name_id, item_type_id, action_type, action_detail, src_or_dst, 
+    quantity, price, price_put_in, all_price, all_price_put_in, time, img_url, docter_name, 
+    gentai_name, patient_name, zhuyuan_no, state, action_desc, create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -27,37 +36,39 @@
         from records
         where id = #{id,jdbcType=INTEGER}
     </select>
+
     <select id="getBySettedCondition" resultMap="BaseResultMap"
             parameterType="com.woslx.rep.rep.entity.RecordsQueryCondition">
         select
         <include refid="Base_Column_List"/>
         from records
         where
-            state = 1
-            <if test="itemId != null">
-                and item_id = #{itemId,jdbcType=INTEGER}
-            </if>
-            <if test="itemTypeId != null">
-                and item_type_id = #{itemTypeId,jdbcType=INTEGER}
-            </if>
+        state = 1
+        <if test="itemId != null">
+            and item_id = #{itemId,jdbcType=INTEGER}
+        </if>
+        <if test="itemTypeId != null">
+            and item_type_id = #{itemTypeId,jdbcType=INTEGER}
+        </if>
 
-            <if test="itemNameId != null">
-                and item_name_id = #{itemNameId,jdbcType=INTEGER}
-            </if>
+        <if test="itemNameId != null">
+            and item_name_id = #{itemNameId,jdbcType=INTEGER}
+        </if>
 
-            <if test="actionType != null">
-                and action_type = #{actionType,jdbcType=INTEGER}
-            </if>
+        <if test="actionType != null">
+            and action_type = #{actionType,jdbcType=INTEGER}
+        </if>
 
-            <if test="startTime != null">
-                and unix_timestamp(`time`) >= unix_timestamp(#{startTime,jdbcType=VARCHAR})
-            </if>
+        <if test="startTime != null">
+            and unix_timestamp(`time`) >= unix_timestamp(#{startTime,jdbcType=VARCHAR})
+        </if>
 
-            <if test="endTime != null">
-                and unix_timestamp(`time`) &lt; unix_timestamp(#{endTime,jdbcType=VARCHAR})
-            </if>
+        <if test="endTime != null">
+            and unix_timestamp(`time`) &lt; unix_timestamp(#{endTime,jdbcType=VARCHAR})
+        </if>
 
     </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from records
     where id = #{id,jdbcType=INTEGER}
@@ -65,14 +76,20 @@
     <insert id="insert" parameterType="com.woslx.rep.rep.entity.Records">
     insert into records (id, item_id, item_name_id, 
       item_type_id, action_type, action_detail, 
-      action_desc, src_or_dst, quantity, 
-      time, img_url, state, 
-      create_time, update_time)
+      src_or_dst, quantity, price, 
+      price_put_in, all_price, all_price_put_in, 
+      time, img_url, docter_name, 
+      gentai_name, patient_name, zhuyuan_no, 
+      state, action_desc, create_time, 
+      update_time)
     values (#{id,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{itemNameId,jdbcType=INTEGER}, 
       #{itemTypeId,jdbcType=INTEGER}, #{actionType,jdbcType=INTEGER}, #{actionDetail,jdbcType=INTEGER}, 
-      #{actionDesc,jdbcType=VARCHAR}, #{srcOrDst,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, 
-      #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{srcOrDst,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, 
+      #{pricePutIn,jdbcType=INTEGER}, #{allPrice,jdbcType=INTEGER}, #{allPricePutIn,jdbcType=INTEGER}, 
+      #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, #{docterName,jdbcType=VARCHAR}, 
+      #{gentaiName,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, #{zhuyuanNo,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{actionDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.woslx.rep.rep.entity.Records">
         insert into records
@@ -95,14 +112,23 @@
             <if test="actionDetail != null">
                 action_detail,
             </if>
-            <if test="actionDesc != null">
-                action_desc,
-            </if>
             <if test="srcOrDst != null">
                 src_or_dst,
             </if>
             <if test="quantity != null">
                 quantity,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="pricePutIn != null">
+                price_put_in,
+            </if>
+            <if test="allPrice != null">
+                all_price,
+            </if>
+            <if test="allPricePutIn != null">
+                all_price_put_in,
             </if>
             <if test="time != null">
                 time,
@@ -110,8 +136,23 @@
             <if test="imgUrl != null">
                 img_url,
             </if>
+            <if test="docterName != null">
+                docter_name,
+            </if>
+            <if test="gentaiName != null">
+                gentai_name,
+            </if>
+            <if test="patientName != null">
+                patient_name,
+            </if>
+            <if test="zhuyuanNo != null">
+                zhuyuan_no,
+            </if>
             <if test="state != null">
                 state,
+            </if>
+            <if test="actionDesc != null">
+                action_desc,
             </if>
             <if test="createTime != null">
                 create_time,
@@ -139,14 +180,23 @@
             <if test="actionDetail != null">
                 #{actionDetail,jdbcType=INTEGER},
             </if>
-            <if test="actionDesc != null">
-                #{actionDesc,jdbcType=VARCHAR},
-            </if>
             <if test="srcOrDst != null">
                 #{srcOrDst,jdbcType=VARCHAR},
             </if>
             <if test="quantity != null">
                 #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="pricePutIn != null">
+                #{pricePutIn,jdbcType=INTEGER},
+            </if>
+            <if test="allPrice != null">
+                #{allPrice,jdbcType=INTEGER},
+            </if>
+            <if test="allPricePutIn != null">
+                #{allPricePutIn,jdbcType=INTEGER},
             </if>
             <if test="time != null">
                 #{time,jdbcType=TIMESTAMP},
@@ -154,8 +204,23 @@
             <if test="imgUrl != null">
                 #{imgUrl,jdbcType=VARCHAR},
             </if>
+            <if test="docterName != null">
+                #{docterName,jdbcType=VARCHAR},
+            </if>
+            <if test="gentaiName != null">
+                #{gentaiName,jdbcType=VARCHAR},
+            </if>
+            <if test="patientName != null">
+                #{patientName,jdbcType=VARCHAR},
+            </if>
+            <if test="zhuyuanNo != null">
+                #{zhuyuanNo,jdbcType=VARCHAR},
+            </if>
             <if test="state != null">
                 #{state,jdbcType=INTEGER},
+            </if>
+            <if test="actionDesc != null">
+                #{actionDesc,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
@@ -183,14 +248,23 @@
             <if test="actionDetail != null">
                 action_detail = #{actionDetail,jdbcType=INTEGER},
             </if>
-            <if test="actionDesc != null">
-                action_desc = #{actionDesc,jdbcType=VARCHAR},
-            </if>
             <if test="srcOrDst != null">
                 src_or_dst = #{srcOrDst,jdbcType=VARCHAR},
             </if>
             <if test="quantity != null">
                 quantity = #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="pricePutIn != null">
+                price_put_in = #{pricePutIn,jdbcType=INTEGER},
+            </if>
+            <if test="allPrice != null">
+                all_price = #{allPrice,jdbcType=INTEGER},
+            </if>
+            <if test="allPricePutIn != null">
+                all_price_put_in = #{allPricePutIn,jdbcType=INTEGER},
             </if>
             <if test="time != null">
                 time = #{time,jdbcType=TIMESTAMP},
@@ -198,8 +272,23 @@
             <if test="imgUrl != null">
                 img_url = #{imgUrl,jdbcType=VARCHAR},
             </if>
+            <if test="docterName != null">
+                docter_name = #{docterName,jdbcType=VARCHAR},
+            </if>
+            <if test="gentaiName != null">
+                gentai_name = #{gentaiName,jdbcType=VARCHAR},
+            </if>
+            <if test="patientName != null">
+                patient_name = #{patientName,jdbcType=VARCHAR},
+            </if>
+            <if test="zhuyuanNo != null">
+                zhuyuan_no = #{zhuyuanNo,jdbcType=VARCHAR},
+            </if>
             <if test="state != null">
                 state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="actionDesc != null">
+                action_desc = #{actionDesc,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -217,12 +306,20 @@
       item_type_id = #{itemTypeId,jdbcType=INTEGER},
       action_type = #{actionType,jdbcType=INTEGER},
       action_detail = #{actionDetail,jdbcType=INTEGER},
-      action_desc = #{actionDesc,jdbcType=VARCHAR},
       src_or_dst = #{srcOrDst,jdbcType=VARCHAR},
       quantity = #{quantity,jdbcType=INTEGER},
+      price = #{price,jdbcType=INTEGER},
+      price_put_in = #{pricePutIn,jdbcType=INTEGER},
+      all_price = #{allPrice,jdbcType=INTEGER},
+      all_price_put_in = #{allPricePutIn,jdbcType=INTEGER},
       time = #{time,jdbcType=TIMESTAMP},
       img_url = #{imgUrl,jdbcType=VARCHAR},
+      docter_name = #{docterName,jdbcType=VARCHAR},
+      gentai_name = #{gentaiName,jdbcType=VARCHAR},
+      patient_name = #{patientName,jdbcType=VARCHAR},
+      zhuyuan_no = #{zhuyuanNo,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
+      action_desc = #{actionDesc,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

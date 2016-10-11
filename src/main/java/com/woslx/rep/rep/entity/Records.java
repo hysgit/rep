@@ -15,6 +15,8 @@ public class Records {
 
     private Integer actionDetail;
 
+    private String transactionalNumber;
+
     private String srcOrDst;
 
     private Integer quantity;
@@ -93,6 +95,14 @@ public class Records {
 
     public void setActionDetail(Integer actionDetail) {
         this.actionDetail = actionDetail;
+    }
+
+    public String getTransactionalNumber() {
+        return transactionalNumber;
+    }
+
+    public void setTransactionalNumber(String transactionalNumber) {
+        this.transactionalNumber = transactionalNumber == null ? null : transactionalNumber.trim();
     }
 
     public String getSrcOrDst() {

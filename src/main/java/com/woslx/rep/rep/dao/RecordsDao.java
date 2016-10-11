@@ -19,4 +19,6 @@ public interface RecordsDao {
     int updateByPrimaryKey(Records record);
 
     List<Records> getBySettedCondition(RecordsQueryCondition condition);
+
+    List<Records> getByTransactionalNumber(String transactionalNumber);
 }

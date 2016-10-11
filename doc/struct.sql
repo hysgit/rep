@@ -53,6 +53,7 @@ create table if not exists records
   item_type_id int not null comment '商品类型id',
   action_type int not null comment '1: 出库,2:入库',
   action_detail int not null comment '入库, 1. 原始库存入库; 2:补货,来自平台; 3: 调货，其他渠道. 出库, 101: 手术; 102: 报废; 103: 遗失; 104: 出货给二级代理商; 105: 退货给平台',
+  transactional_number varchar(30)  comment  '如果是入库，流水号必填',
   src_or_dst varchar(30) comment '入库来源或者出库目的地',
   quantity int not null comment '数量,扩大10倍存储',
   price int  comment '如果是出库 单价,可以由页面输入，未输入则采用商品表中的数据',

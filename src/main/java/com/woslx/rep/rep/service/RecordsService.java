@@ -17,4 +17,6 @@ public interface RecordsService {
     List<Records> getBySettedConditon(RecordsQueryCondition condition);
 
     void delete(Records records);
+
+    List<Records> getByTransactionalNumber(String transactionalNumber);
 }

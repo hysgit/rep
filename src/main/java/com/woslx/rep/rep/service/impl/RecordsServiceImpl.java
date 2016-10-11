@@ -41,4 +41,9 @@ public class RecordsServiceImpl implements RecordsService {
         records.setUpdateTime(new Date());
         recordsDao.updateByPrimaryKey(records);
     }
+
+    @Override
+    public List<Records> getByTransactionalNumber(String transactionalNumber) {
+        return recordsDao.getByTransactionalNumber(transactionalNumber);
+    }
 }

@@ -8,6 +8,7 @@
         <result column="item_type_id" property="itemTypeId" jdbcType="INTEGER"/>
         <result column="action_type" property="actionType" jdbcType="INTEGER"/>
         <result column="action_detail" property="actionDetail" jdbcType="INTEGER"/>
+        <result column="transactional_number" property="transactionalNumber" jdbcType="VARCHAR"/>
         <result column="src_or_dst" property="srcOrDst" jdbcType="VARCHAR"/>
         <result column="quantity" property="quantity" jdbcType="INTEGER"/>
         <result column="price" property="price" jdbcType="INTEGER"/>
@@ -26,9 +27,10 @@
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, item_id, item_name_id, item_type_id, action_type, action_detail, src_or_dst, 
-    quantity, price, price_put_in, all_price, all_price_put_in, time, img_url, docter_name, 
-    gentai_name, patient_name, zhuyuan_no, state, action_desc, create_time, update_time
+    id, item_id, item_name_id, item_type_id, action_type, action_detail, transactional_number, 
+    src_or_dst, quantity, price, price_put_in, all_price, all_price_put_in, time, img_url, 
+    docter_name, gentai_name, patient_name, zhuyuan_no, state, action_desc, create_time, 
+    update_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -36,39 +38,14 @@
         from records
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="getBySettedCondition" resultType="com.woslx.rep.rep.entity.Records"></select>
 
-    <select id="getBySettedCondition" resultMap="BaseResultMap"
-            parameterType="com.woslx.rep.rep.entity.RecordsQueryCondition">
+    <select id="getByTransactionalNumber" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from records
-        where
-        state = 1
-        <if test="itemId != null">
-            and item_id = #{itemId,jdbcType=INTEGER}
-        </if>
-        <if test="itemTypeId != null">
-            and item_type_id = #{itemTypeId,jdbcType=INTEGER}
-        </if>
-
-        <if test="itemNameId != null">
-            and item_name_id = #{itemNameId,jdbcType=INTEGER}
-        </if>
-
-        <if test="actionType != null">
-            and action_type = #{actionType,jdbcType=INTEGER}
-        </if>
-
-        <if test="startTime != null">
-            and unix_timestamp(`time`) >= unix_timestamp(#{startTime,jdbcType=VARCHAR})
-        </if>
-
-        <if test="endTime != null">
-            and unix_timestamp(`time`) &lt; unix_timestamp(#{endTime,jdbcType=VARCHAR})
-        </if>
-
+        where transactional_number=#{transactionalNumber,jdbcType=VARCHAR}
     </select>
-
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from records
     where id = #{id,jdbcType=INTEGER}
@@ -76,20 +53,20 @@
     <insert id="insert" parameterType="com.woslx.rep.rep.entity.Records">
     insert into records (id, item_id, item_name_id, 
       item_type_id, action_type, action_detail, 
-      src_or_dst, quantity, price, 
-      price_put_in, all_price, all_price_put_in, 
-      time, img_url, docter_name, 
-      gentai_name, patient_name, zhuyuan_no, 
-      state, action_desc, create_time, 
-      update_time)
+      transactional_number, src_or_dst, quantity, 
+      price, price_put_in, all_price, 
+      all_price_put_in, time, img_url, 
+      docter_name, gentai_name, patient_name, 
+      zhuyuan_no, state, action_desc, 
+      create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{itemNameId,jdbcType=INTEGER}, 
       #{itemTypeId,jdbcType=INTEGER}, #{actionType,jdbcType=INTEGER}, #{actionDetail,jdbcType=INTEGER}, 
-      #{srcOrDst,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, 
-      #{pricePutIn,jdbcType=INTEGER}, #{allPrice,jdbcType=INTEGER}, #{allPricePutIn,jdbcType=INTEGER}, 
-      #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, #{docterName,jdbcType=VARCHAR}, 
-      #{gentaiName,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, #{zhuyuanNo,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{actionDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{transactionalNumber,jdbcType=VARCHAR}, #{srcOrDst,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, 
+      #{price,jdbcType=INTEGER}, #{pricePutIn,jdbcType=INTEGER}, #{allPrice,jdbcType=INTEGER}, 
+      #{allPricePutIn,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{docterName,jdbcType=VARCHAR}, #{gentaiName,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, 
+      #{zhuyuanNo,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{actionDesc,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.woslx.rep.rep.entity.Records">
         insert into records
@@ -111,6 +88,9 @@
             </if>
             <if test="actionDetail != null">
                 action_detail,
+            </if>
+            <if test="transactionalNumber != null">
+                transactional_number,
             </if>
             <if test="srcOrDst != null">
                 src_or_dst,
@@ -180,6 +160,9 @@
             <if test="actionDetail != null">
                 #{actionDetail,jdbcType=INTEGER},
             </if>
+            <if test="transactionalNumber != null">
+                #{transactionalNumber,jdbcType=VARCHAR},
+            </if>
             <if test="srcOrDst != null">
                 #{srcOrDst,jdbcType=VARCHAR},
             </if>
@@ -248,6 +231,9 @@
             <if test="actionDetail != null">
                 action_detail = #{actionDetail,jdbcType=INTEGER},
             </if>
+            <if test="transactionalNumber != null">
+                transactional_number = #{transactionalNumber,jdbcType=VARCHAR},
+            </if>
             <if test="srcOrDst != null">
                 src_or_dst = #{srcOrDst,jdbcType=VARCHAR},
             </if>
@@ -306,6 +292,7 @@
       item_type_id = #{itemTypeId,jdbcType=INTEGER},
       action_type = #{actionType,jdbcType=INTEGER},
       action_detail = #{actionDetail,jdbcType=INTEGER},
+      transactional_number = #{transactionalNumber,jdbcType=VARCHAR},
       src_or_dst = #{srcOrDst,jdbcType=VARCHAR},
       quantity = #{quantity,jdbcType=INTEGER},
       price = #{price,jdbcType=INTEGER},

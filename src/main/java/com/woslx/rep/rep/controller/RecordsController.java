@@ -7,8 +7,9 @@ import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
-import com.woslx.rep.rep.entity.param.ParamRecords;
+import com.woslx.rep.rep.entity.param.ParamRecordsRuku;
 import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
+import com.woslx.rep.rep.entity.param.Ruku;
 import com.woslx.rep.rep.entity.vo.RecordsVOList;
 import com.woslx.rep.rep.service.ItemService;
 import com.woslx.rep.rep.service.RecordsService;
@@ -43,113 +44,115 @@ public class RecordsController extends BaseController {
     private ItemService itemService;
 
     /**
-     * 新增一条出入库记录
+     * 新增一条入库记录
      *
-     * @param paramRecords
+     * @param paramRecordsRuku
      * @return
      */
-    @RequestMapping(value = "/create",
+    @RequestMapping(value = "/create/ruku",
             consumes = "application/json",
             produces = "application/json;charset=utf-8")
     @ResponseBody
     @Transactional
-    public String create(@RequestBody ParamRecords paramRecords) {
+    public String create(@RequestBody ParamRecordsRuku paramRecordsRuku) {
         ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 
-        Records records = new Records();
-        try {
-            paramRecords.setId(null);
-            BeanUtils.copyProperties(records, paramRecords);
-        } catch (Exception e) {
-            logger.error("复制属性发生异常,", e);
-            throw new ApiException(1, e.getMessage());
-        }
+        Integer itemInType = paramRecordsRuku.getItemInType();  // 入库类型
+        String transactionalNumber = paramRecordsRuku.getTransactionalNumber();//单号
 
-        Item item = itemService.getById(paramRecords.getItemId());
-        if (item == null) {
-            throw new ApiException(1, "指定的商品不存在");
+        Date date = paramRecordsRuku.getDate();     //日期
+        if (date == null) {
+            apiResult.setCode(1);
+            apiResult.setMessage("未设置日期");
+            return apiResult.toString();
         }
-        records.setItemNameId(item.getNameId());
-        records.setItemTypeId(item.getTypeId());
+        List<Ruku> list = paramRecordsRuku.getList();
 
-        //处理数量问题 数量扩大10倍
-        Integer quantity = (int) Math.round((Double.parseDouble(paramRecords.getQuantity()) * 10));
-        records.setQuantity(quantity);
-        if (1 == records.getActionType())        //1 出库
-        {
-            Integer quantityCurrent = item.getQuantityCurrent();
-            if ((quantityCurrent == null) || (quantityCurrent < quantity)) {
-                throw new ApiException(1, "库存少于当前出库数,不能出库");
+        //判断该单号是否已经入库
+//        List<Records> recordsList = recordsService.getByTransactionalNumber(transactionalNumber);
+//
+//        if (recordsList != null && recordsList.size() > 0) {
+//            apiResult.setCode(1);
+//            apiResult.setMessage("该单号已经入库");
+//            return apiResult.toString();
+//        }
+
+        for (Ruku ruku : list) {
+            Records records = new Records();
+            records.setActionType(2);   // 入库
+            records.setActionDetail(itemInType);
+            records.setTransactionalNumber(transactionalNumber);
+            records.setTime(date);
+
+            records.setSrcOrDst(ruku.getSrc());
+
+            Item item = itemService.getById(ruku.getItemId());
+            if (item == null) {
+                throw new ApiException(1, "指定的商品不存在");
             }
-            Integer quantityUse = item.getQuantityUse();        //已经使用
-            if (quantityUse == null) {
-                item.setQuantityUse(quantity);
-            } else {
-                item.setQuantityUse(item.getQuantityUse() + quantity);
-            }
-        } else {      // 2入库
-            Integer quantityAll = item.getQuantityAll();
-            if (quantityAll == null) {
-                item.setQuantityAll(quantity);
-            } else {
-                item.setQuantityAll(item.getQuantityAll() + quantity);
-            }
-        }
-        if(item.getQuantityUse() == null) {
-            item.setQuantityUse(0);
-        }
-        item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());
-        itemService.update(item);//更新商品数量
+            records.setItemId(item.getId());
+            records.setItemTypeId(item.getTypeId());
+            records.setItemNameId(item.getNameId());
 
-        records.setState(1);
-        Date now = new Date();
-        records.setCreateTime(now);
-        records.setUpdateTime(now);
+            int quality = ruku.getQuality() * 10;
 
-        recordsService.insert(records); //保存记录
+            records.setQuantity(quality);
+
+            records.setState(1);
+            Date date2 = new Date();
+            records.setCreateTime(date2);
+            records.setUpdateTime(date2);
+
+
+            recordsService.insert(records); //保存记录
+
+            item.setQuantityAll(item.getQuantityAll()+quality);
+            item.setQuantityCurrent(item.getQuantityAll()-item.getQuantityUse());
+            itemService.update(item);
+        }
 
         return apiResult.toString();
     }
 
     /**
      * 根据id删除出库记录
-     * @param paramRecords
+     * @param paramRecordsRuku
      * @return
      */
-    @RequestMapping(value = "/delete",
-            consumes = "application/json",
-            produces = "application/json;charset=utf-8")
-    @ResponseBody
-    @Transactional
-    public String deleteById(@RequestBody ParamRecords paramRecords) {
-        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
-        Records records = recordsService.getById(paramRecords.getId());
-        if (records == null) {
-            logger.error("未找到记录, id: {}",paramRecords.getId());
-            throw new ApiException(1, "未找到记录");
-        }
-
-        Item item = itemService.getById(records.getItemId());
-        if (item == null) {
-            logger.error("根据记录中的商品id未找到商品, record id: {}, item id: {}",paramRecords.getId(),records.getItemId());
-            throw new ApiException(1, "根据记录中的商品id未找到商品");
-        }
-        Integer quantity = records.getQuantity();
-
-        Integer actionType = records.getActionType();
-
-        if(actionType == 1) //出库
-        {
-            item.setQuantityUse(item.getQuantityUse()-quantity);
-        }
-        else {  //入库
-            item.setQuantityAll(item.getQuantityAll()-quantity);
-        }
-        item.setQuantityCurrent(item.getQuantityAll()-item.getQuantityUse());
-        itemService.update(item);
-        recordsService.delete(records);
-        return apiResult.toString();
-    }
+//    @RequestMapping(value = "/delete",
+//            consumes = "application/json",
+//            produces = "application/json;charset=utf-8")
+//    @ResponseBody
+//    @Transactional
+//    public String deleteById(@RequestBody ParamRecordsRuku paramRecordsRuku) {
+//        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+//        Records records = recordsService.getById(paramRecordsRuku.getId());
+//        if (records == null) {
+//            logger.error("未找到记录, id: {}", paramRecordsRuku.getId());
+//            throw new ApiException(1, "未找到记录");
+//        }
+//
+//        Item item = itemService.getById(records.getItemId());
+//        if (item == null) {
+//            logger.error("根据记录中的商品id未找到商品, record id: {}, item id: {}", paramRecordsRuku.getId(),records.getItemId());
+//            throw new ApiException(1, "根据记录中的商品id未找到商品");
+//        }
+//        Integer quantity = records.getQuantity();
+//
+//        Integer actionType = records.getActionType();
+//
+//        if(actionType == 1) //出库
+//        {
+//            item.setQuantityUse(item.getQuantityUse()-quantity);
+//        }
+//        else {  //入库
+//            item.setQuantityAll(item.getQuantityAll()-quantity);
+//        }
+//        item.setQuantityCurrent(item.getQuantityAll()-item.getQuantityUse());
+//        itemService.update(item);
+//        recordsService.delete(records);
+//        return apiResult.toString();
+//    }
 
     /**
      * 查询记录

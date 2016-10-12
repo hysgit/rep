@@ -45,8 +45,8 @@
             console.log(event);
             event.preventDefault();
             var itemTypeId = $("#itemTypeId").val();
-            var itemName = $("#itemName").val();
-            if(itemName==null)
+            var itemName = $("#itemName").val().trim();
+            if(itemName==null || itemName == "")
             {
                 alert("商品名称不能为空");
                 return;

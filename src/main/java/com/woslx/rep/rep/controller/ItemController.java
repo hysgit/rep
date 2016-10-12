@@ -4,8 +4,13 @@ import com.woslx.rep.common.ApiException;
 import com.woslx.rep.common.ApiResult;
 import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Item;
+import com.woslx.rep.rep.entity.ItemName;
+import com.woslx.rep.rep.entity.ItemType;
 import com.woslx.rep.rep.entity.param.ParamItem;
+import com.woslx.rep.rep.entity.vo.ItemOut;
+import com.woslx.rep.rep.service.ItemNameService;
 import com.woslx.rep.rep.service.ItemService;
+import com.woslx.rep.rep.service.ItemTypeService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +37,13 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ItemTypeService itemTypeService;
+
+    @Autowired
+    private ItemNameService itemNameService;
+
 
     /**
      * 新增商品
@@ -196,8 +209,10 @@ public class ItemController {
     @ResponseBody
     public String getAll()
     {
-        ApiResult<List<Item>> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+        ApiResult<List<ItemOut>> apiResult = new ApiResult<>(0, Constants.SUCCESS);
         List<Item> itemList = itemService.getAll();
+
+
         if(itemList == null)
         {
             throw new ApiException(1, "未找到Item");
@@ -208,9 +223,35 @@ public class ItemController {
             apiResult.setMessage("查询结果为空");
         }
         else {
-            apiResult.setData(itemList);
+            List<ItemOut> itemOuts = createItemOut(itemList);
+            apiResult.setData(itemOuts);
         }
 
         return apiResult.toString();
+    }
+
+    private List<ItemOut> createItemOut(List<Item> itemList) {
+
+        List<ItemOut> itemOuts = new ArrayList<>();
+
+        for(Item item: itemList)
+        {
+            ItemOut itemOut = new ItemOut();
+            itemOuts.add(itemOut);
+
+            ItemName itemName = itemNameService.getById(item.getNameId());
+            ItemType itemType = itemTypeService.getById(item.getTypeId());
+
+            itemOut.setTypeName(itemType.getName());
+            itemOut.setName(itemName.getName());
+            itemOut.setId(item.getId());
+            itemOut.setQuantityAll(item.getQuantityAll()/10.0);
+            itemOut.setQuantityCurrent(item.getQuantityCurrent()/10.0);
+            itemOut.setQuantityUse(item.getQuantityUse()/10.0);
+            itemOut.setSerialNumber(item.getSerialNumber());
+            itemOut.setSpecifications(item.getSpecifications());
+        }
+
+        return itemOuts;
     }
 }

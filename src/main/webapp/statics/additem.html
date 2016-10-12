@@ -24,7 +24,7 @@
 <p>
 </p>
 <div class="form-group form-inline">
-    <label for="itemTypeId">请选择商品类型:</label>
+    <label for="itemTypeId">商品类型:</label>
     <select id="itemTypeId" class="form-control" name="itemTypeId">
         <option disabled selected value="0">请选择</option>
         <option value="1">脊柱</option>
@@ -34,29 +34,29 @@
 
 
 <div class="form-group  form-inline">
-    <label for="itemNameId">请选择商品名称: </label>
+    <label for="itemNameId">商品名称: </label>
     <select id="itemNameId" class="form-control">
 
     </select>
 </div>
 
 <div class="form-group  form-inline">
-    <label for="sn">请输入商品编号: </label>
+    <label for="sn">商品编号: </label>
     <input type="text" class="form-control" id="sn" placeholder="必填">
 </div>
 
 <div class="form-group  form-inline">
-    <label for="spec">请输入商品规格: </label>
+    <label for="spec">商品规格: </label>
     <input type="text" class="form-control" id="spec" placeholder="必填">
 </div>
 
 <div class="form-group  form-inline">
-    <label for="factoryName">请输入厂商名称: </label>
+    <label for="factoryName">厂商名称: </label>
     <input type="text" class="form-control" id="factoryName" placeholder="选填">
 </div>
 
 <div class="form-group  form-inline">
-    <label for="price">请输入商品单价: </label>
+    <label for="price">商品单价: </label>
     <input type="text" class="form-control" id="price" placeholder="必填，单位：元">
 </div>
 
@@ -126,7 +126,10 @@
 
             if ((typeId == null) || (nameId == null)
                     || (serialNumber == null) || (specifications == null)
-                    || (price == null)
+                    || (price == null)||
+                    (typeId == '') || (nameId == '')
+                    || (serialNumber == '') || (specifications == '')
+                    || (price == '')
             ) {
                 alert("必填参数必须全部填写");
                 return;

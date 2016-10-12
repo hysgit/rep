@@ -46,6 +46,7 @@
     select <include refid="Base_Column_List"/>
     from item
     where serial_number=#{serialNumber,jdbcType=VARCHAR}
+    order by type_id
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

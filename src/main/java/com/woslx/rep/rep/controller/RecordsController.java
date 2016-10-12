@@ -7,9 +7,7 @@ import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
-import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
-import com.woslx.rep.rep.entity.param.ParamRecordsRuku;
-import com.woslx.rep.rep.entity.param.Ruku;
+import com.woslx.rep.rep.entity.param.*;
 import com.woslx.rep.rep.entity.vo.RecordsVOList;
 import com.woslx.rep.rep.service.ItemService;
 import com.woslx.rep.rep.service.RecordsService;
@@ -109,6 +107,103 @@ public class RecordsController extends BaseController {
             item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());
 
             records.setQuantityAfter(item.getQuantityCurrent());
+
+            records.setState(1);
+
+            Date date2 = new Date();
+            records.setCreateTime(date2);
+            records.setUpdateTime(date2);
+
+
+            recordsService.insert(records); //保存记录
+            itemService.update(item);
+        }
+
+        return apiResult.toString();
+    }
+
+    /**
+     * 新增一条出库记录
+     *
+     * @param paramRecordsOut
+     * @return
+     */
+    @RequestMapping(value = "/create/out",
+            consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    @Transactional
+    public String createOut(@RequestBody ParamRecordsOut paramRecordsOut) {
+        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+
+        Integer itemOutType = paramRecordsOut.getItemOutType();  // 出库类型
+
+        Date date = paramRecordsOut.getDate();     //日期
+        if (date == null) {
+            apiResult.setCode(1);
+            apiResult.setMessage("未设置日期");
+            return apiResult.toString();
+        }
+
+        List<Out> list = paramRecordsOut.getList();
+
+        for (Out out : list) {
+            Records records = new Records();
+            records.setActionType(1);   // 出库
+            records.setActionDetail(itemOutType);
+
+            Item item = itemService.getById(out.getItemId());
+            if (item == null) {
+                throw new ApiException(1, "指定的商品不存在");
+            }
+
+
+            if (itemOutType == 101) {
+                records.setDocterName(paramRecordsOut.getDocterName());
+                records.setGentaiName(paramRecordsOut.getGentaiName());
+                records.setPatientName(paramRecordsOut.getPatientName());
+                records.setZhuyuanNo(paramRecordsOut.getZhuyuanNo());
+
+                Integer price = out.getPrice();
+                if (price != null) {
+                    records.setPrice(price);
+                    records.setPricePutIn(1);   //外部设定
+                }
+                else {
+                    price = item.getPrice();
+                    records.setPrice(price);
+                    records.setPricePutIn(0);   //外部设定
+                }
+
+                Integer priceAll = out.getPriceAll();
+                if(priceAll != null)
+                {
+                    records.setAllPrice(priceAll);
+                    records.setAllPricePutIn(1);   //外部设定
+                }
+                else {
+                    records.setAllPrice((int)Math.round(price*1.0* out.getQuality()));
+                    records.setAllPricePutIn(0);   //外部设定
+                }
+            }
+
+            records.setTime(date);
+
+            records.setSrcOrDst(out.getDst());
+
+
+            records.setItemId(item.getId());
+            records.setItemTypeId(item.getTypeId());
+            records.setItemNameId(item.getNameId());
+
+            int quality = out.getQuality();
+            records.setQuantityBefore(item.getQuantityCurrent());       //保存出库前数量
+
+            records.setQuantity(quality);
+            item.setQuantityUse(item.getQuantityUse() + quality);       //修改出库数量
+            item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());     //修改当前数量
+
+            records.setQuantityAfter(item.getQuantityCurrent());        //保存出库后数量
 
             records.setState(1);
 

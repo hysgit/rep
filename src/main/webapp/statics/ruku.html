@@ -40,7 +40,7 @@
     <div class="form-group">
         <label for="dtp_input2" class="control-label">请选择日期</label>
         <div class="input-group date form_date" data-date="" data-date-format="yyyy年mm月dd日" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-            <input class="form-control" size="16" type="text" value="" readonly>
+            <input class="form-control" size="12" type="text" value="" readonly>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
         </div>
         <input type="hidden" id="dtp_input2" value="" /><br/>
@@ -52,11 +52,11 @@
 <table id="tablein" class="table .table-striped">
     <thead>
     <tr>
-        <th><span>请选择商品类型:</span></th>
-        <th><span>请选择商品名称:</span></th>
-        <th><span>请选择商品型号:</span></th>
-        <th><span>请输入商品数量:</span></th>
-        <th><span>请输入商品来源:</span></th>
+        <th><span>商品类型:</span></th>
+        <th><span>商品名称:</span></th>
+        <th><span>商品型号:</span></th>
+        <th><span>商品数量:</span></th>
+        <th><span>商品来源:</span></th>
     </tr>
     </thead>
     <tbody id = "table_body">
@@ -211,7 +211,7 @@
             var nameId = $("#itemNameId" + row).val().trim();
             obj.quality = Math.round(parseFloat($("#quality" + row).val().trim())*10);
 
-            if(obj.itemId==null || typeId == null || nameId == null || obj.quality == null ||obj.quality < 1)
+            if(obj.itemId==null || typeId == null || nameId == null || isNaN(obj.quality) || obj.quality < 1)
             {
                 alert("必填项必须填写！");
                 return;

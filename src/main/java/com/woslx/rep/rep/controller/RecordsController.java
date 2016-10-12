@@ -182,7 +182,7 @@ public class RecordsController extends BaseController {
                     records.setAllPricePutIn(1);   //外部设定
                 }
                 else {
-                    records.setAllPrice((int)Math.round(price*1.0* out.getQuality()));
+                    records.setAllPrice((int)Math.round(price* out.getQuality()/10.0));
                     records.setAllPricePutIn(0);   //外部设定
                 }
             }
@@ -201,6 +201,10 @@ public class RecordsController extends BaseController {
 
             records.setQuantity(quality);
             item.setQuantityUse(item.getQuantityUse() + quality);       //修改出库数量
+            if(item.getQuantityAll() - item.getQuantityUse() < 0)
+            {
+                throw new RuntimeException("出库数量大于库存");
+            }
             item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());     //修改当前数量
 
             records.setQuantityAfter(item.getQuantityCurrent());        //保存出库后数量

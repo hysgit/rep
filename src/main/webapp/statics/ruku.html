@@ -192,6 +192,12 @@
             transactionalNumber = "xx11111111111111111";
         }
 
+        if(transactionalNumber==null || transactionalNumber ==undefined || transactionalNumber=="")
+        {
+            alert("流水单号必须写");
+            return;
+        }
+
         var date = $("#dtp_input2").val();          //获取到日期值
 
         var array = [];//定义一个数组
@@ -200,10 +206,10 @@
         console.log(len);
         for(var row=1; row < len+1; row++) {
             var obj = {};
-            obj.itemId = $("#itemTypeId" + row).val().trim();
-            var typeId = $("#itemId" + row).val().trim();
+            obj.itemId = $("#itemId" + row).val().trim();
+            var typeId = $("#itemTypeId" + row).val().trim();
             var nameId = $("#itemNameId" + row).val().trim();
-            obj.quality = $("#quality" + row).val().trim();
+            obj.quality = Math.round(parseFloat($("#quality" + row).val().trim())*10);
 
             if(obj.itemId==null || typeId == null || nameId == null || obj.quality == null ||obj.quality < 1)
             {

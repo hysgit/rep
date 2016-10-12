@@ -7,18 +7,18 @@ import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
-import com.woslx.rep.rep.entity.param.ParamRecordsRuku;
 import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
+import com.woslx.rep.rep.entity.param.ParamRecordsRuku;
 import com.woslx.rep.rep.entity.param.Ruku;
 import com.woslx.rep.rep.entity.vo.RecordsVOList;
 import com.woslx.rep.rep.service.ItemService;
 import com.woslx.rep.rep.service.RecordsService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,6 +66,13 @@ public class RecordsController extends BaseController {
             apiResult.setMessage("未设置日期");
             return apiResult.toString();
         }
+
+        if (StringUtils.isEmpty(transactionalNumber)) {
+            apiResult.setCode(1);
+            apiResult.setMessage("流水单号必填");
+            return apiResult.toString();
+        }
+
         List<Ruku> list = paramRecordsRuku.getList();
 
         //判断该单号是否已经入库
@@ -94,7 +101,7 @@ public class RecordsController extends BaseController {
             records.setItemTypeId(item.getTypeId());
             records.setItemNameId(item.getNameId());
 
-            int quality = ruku.getQuality() * 10;
+            int quality = ruku.getQuality();
 
             records.setQuantity(quality);
 
@@ -103,11 +110,10 @@ public class RecordsController extends BaseController {
             records.setCreateTime(date2);
             records.setUpdateTime(date2);
 
-
             recordsService.insert(records); //保存记录
 
-            item.setQuantityAll(item.getQuantityAll()+quality);
-            item.setQuantityCurrent(item.getQuantityAll()-item.getQuantityUse());
+            item.setQuantityAll(item.getQuantityAll() + quality);
+            item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());
             itemService.update(item);
         }
 

@@ -102,18 +102,22 @@ public class RecordsController extends BaseController {
             records.setItemNameId(item.getNameId());
 
             int quality = ruku.getQuality();
-
+            records.setQuantityBefore(item.getQuantityCurrent());
             records.setQuantity(quality);
 
+            item.setQuantityAll(item.getQuantityAll() + quality);
+            item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());
+
+            records.setQuantityAfter(item.getQuantityCurrent());
+
             records.setState(1);
+
             Date date2 = new Date();
             records.setCreateTime(date2);
             records.setUpdateTime(date2);
 
-            recordsService.insert(records); //保存记录
 
-            item.setQuantityAll(item.getQuantityAll() + quality);
-            item.setQuantityCurrent(item.getQuantityAll() - item.getQuantityUse());
+            recordsService.insert(records); //保存记录
             itemService.update(item);
         }
 

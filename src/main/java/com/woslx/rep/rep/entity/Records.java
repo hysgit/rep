@@ -19,7 +19,11 @@ public class Records {
 
     private String srcOrDst;
 
+    private Integer quantityBefore;
+
     private Integer quantity;
+
+    private Integer quantityAfter;
 
     private Integer price;
 
@@ -113,12 +117,28 @@ public class Records {
         this.srcOrDst = srcOrDst == null ? null : srcOrDst.trim();
     }
 
+    public Integer getQuantityBefore() {
+        return quantityBefore;
+    }
+
+    public void setQuantityBefore(Integer quantityBefore) {
+        this.quantityBefore = quantityBefore;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getQuantityAfter() {
+        return quantityAfter;
+    }
+
+    public void setQuantityAfter(Integer quantityAfter) {
+        this.quantityAfter = quantityAfter;
     }
 
     public Integer getPrice() {

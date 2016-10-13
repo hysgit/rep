@@ -18,10 +18,20 @@ public class ParamRecordsQueryCondition {
 
     private Date startTime;      //起始时间
 
+    private String sn;
+
     //只有结束时间的时候,指比结束时间早的所有
     //只有起始事件的时候,指比起始时间晚的所有
     //起始时间和结束时间都有的时候,指在两者之间的部分
     private Date endTime;       //结束时间
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 
     public Integer getId() {
         return id;

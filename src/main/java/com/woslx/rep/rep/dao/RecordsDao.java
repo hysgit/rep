@@ -21,4 +21,6 @@ public interface RecordsDao {
     List<Records> getBySettedCondition(RecordsQueryCondition condition);
 
     List<Records> getByTransactionalNumber(String transactionalNumber);
+
+    List<Records> getRecordsByItemId(Integer itemId);
 }

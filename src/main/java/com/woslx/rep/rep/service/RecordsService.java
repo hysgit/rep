@@ -19,4 +19,6 @@ public interface RecordsService {
     void delete(Records records);
 
     List<Records> getByTransactionalNumber(String transactionalNumber);
+
+    List<Records> getRecordsByItemId(Integer id);
 }

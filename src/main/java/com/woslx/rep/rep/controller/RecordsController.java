@@ -4,12 +4,13 @@ import com.woslx.rep.common.ApiException;
 import com.woslx.rep.common.ApiResult;
 import com.woslx.rep.common.BaseController;
 import com.woslx.rep.common.Constants;
-import com.woslx.rep.rep.entity.Item;
-import com.woslx.rep.rep.entity.Records;
-import com.woslx.rep.rep.entity.RecordsQueryCondition;
+import com.woslx.rep.rep.entity.*;
 import com.woslx.rep.rep.entity.param.*;
+import com.woslx.rep.rep.entity.vo.RecordsVO;
 import com.woslx.rep.rep.entity.vo.RecordsVOList;
+import com.woslx.rep.rep.service.ItemNameService;
 import com.woslx.rep.rep.service.ItemService;
+import com.woslx.rep.rep.service.ItemTypeService;
 import com.woslx.rep.rep.service.RecordsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,12 @@ public class RecordsController extends BaseController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ItemTypeService itemTypeService;
+
+    @Autowired
+    private ItemNameService itemNameService;
 
     /**
      * 新增一条入库记录
@@ -279,33 +286,78 @@ public class RecordsController extends BaseController {
         RecordsVOList recordsVOList = new RecordsVOList();
 
 
-        Integer id = paramRecordsQueryCondition.getId();
-        if (id != null) {
-            Records records = recordsService.getById(id);
-            if (records != null) {
-                List<Records> list = new ArrayList<>();
-                recordsVOList.setList(list);
-                recordsVOList.setCnt(1);
-                list.add(records);
-            } else {
-                apiResult.setCode(1);
-                apiResult.setMessage("根据id: " + id + "未找到纪录");
-                apiResult.setData(null);
-            }
-        } else {
-            RecordsQueryCondition recordsQueryCondition = new RecordsQueryCondition();
-            recordsQueryCondition.setActionType(paramRecordsQueryCondition.getActionType());
-            recordsQueryCondition.setItemId(paramRecordsQueryCondition.getItemId());
-            recordsQueryCondition.setItemNameId(paramRecordsQueryCondition.getItemNameId());
-            recordsQueryCondition.setItemTypeId(paramRecordsQueryCondition.getItemTypeId());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            recordsQueryCondition.setStartTime(sdf.format(paramRecordsQueryCondition.getStartTime()));
-            recordsQueryCondition.setEndTime(sdf.format(paramRecordsQueryCondition.getEndTime()));
 
-            List<Records> list = recordsService.getBySettedConditon(recordsQueryCondition);
-            recordsVOList.setList(list);
-            recordsVOList.setCnt(list == null ? 0 : list.size());
+
+        return apiResult.toString();
+    }
+
+
+    /**
+     * 查询记录
+     * 在同一个接口里实现多种查询功能
+     *
+     * @param paramRecordsQueryCondition
+     * @return
+     */
+    @RequestMapping(value = "/query/by/sn",
+            consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String queryBySN(@RequestBody ParamRecordsQueryCondition paramRecordsQueryCondition) {
+        ApiResult<RecordsVOList> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+        String sn = paramRecordsQueryCondition.getSn();
+        Item item = itemService.getBySerialNumber(sn);
+
+        if (item == null) {
+            apiResult.setCode(1);
+            apiResult.setMessage("未查找到商品");
+            return apiResult.toString();
         }
+
+        List<Records> list = recordsService.getRecordsByItemId(item.getId());
+        if (list.size() == 0) {
+            apiResult.setCode(1);
+            apiResult.setMessage("未查找到进出库数据");
+            return apiResult.toString();
+        }
+
+
+        RecordsVOList recordsVOList = new RecordsVOList();
+
+        ItemName itemName = itemNameService.getById(item.getNameId());
+
+        ItemType itemType = itemTypeService.getById(item.getTypeId());
+
+        recordsVOList.setTypeName(itemType.getName());
+        recordsVOList.setItemName(itemName.getName());
+        recordsVOList.setSn(sn);
+        recordsVOList.setSpec(item.getSpecifications());
+        recordsVOList.setAllIn(item.getQuantityAll()/10.0);
+        recordsVOList.setAllOut(item.getQuantityUse()/10.0);
+        recordsVOList.setCur(item.getQuantityCurrent()/10.0);
+        recordsVOList.setId(item.getId());
+        List<RecordsVO> list2 = new ArrayList<>();
+        recordsVOList.setList(list2);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+        for (Records records : list) {
+            RecordsVO vo = new RecordsVO();
+            vo.setDate(sdf.format(records.getTime()));
+            vo.setAfter(records.getQuantityAfter()/10.0);
+            vo.setBefore(records.getQuantityBefore()/10.0);
+            vo.setNow(records.getQuantity()/10.0);
+            vo.setDocName(records.getDocterName());
+            vo.setGentai(records.getGentaiName());
+            Integer actionType = records.getActionType();
+            if(actionType == 1) {
+                vo.setInOutType("出库");
+            }
+            else{
+                vo.setInOutType("入库");
+            }
+            vo.setTransn(records.getTransactionalNumber());
+            list2.add(vo);
+        }
+        apiResult.setData(recordsVOList);
 
         return apiResult.toString();
     }

@@ -46,4 +46,9 @@ public class RecordsServiceImpl implements RecordsService {
     public List<Records> getByTransactionalNumber(String transactionalNumber) {
         return recordsDao.getByTransactionalNumber(transactionalNumber);
     }
+
+    @Override
+    public List<Records> getRecordsByItemId(Integer itemId) {
+        return recordsDao.getRecordsByItemId(itemId);
+    }
 }

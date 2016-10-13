@@ -9,23 +9,93 @@ import java.util.List;
  */
 public class RecordsVOList {
 
-    private Integer cnt;
+    private Integer id;
 
-    private List<Records> list;
+    private String typeName;
 
-    public Integer getCnt() {
-        return cnt;
+    private String itemName;
+
+    private String sn;
+
+    private String spec;
+
+    private Double allIn;
+
+    private Double allOut;
+
+    private Double cur;
+
+    private List<RecordsVO> list;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setCnt(Integer cnt) {
-        this.cnt = cnt;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public List<Records> getList() {
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+    }
+
+    public Double getAllIn() {
+        return allIn;
+    }
+
+    public void setAllIn(Double allIn) {
+        this.allIn = allIn;
+    }
+
+    public Double getAllOut() {
+        return allOut;
+    }
+
+    public void setAllOut(Double allOut) {
+        this.allOut = allOut;
+    }
+
+    public Double getCur() {
+        return cur;
+    }
+
+    public void setCur(Double cur) {
+        this.cur = cur;
+    }
+
+    public List<RecordsVO> getList() {
         return list;
     }
 
-    public void setList(List<Records> list) {
+    public void setList(List<RecordsVO> list) {
         this.list = list;
     }
 }

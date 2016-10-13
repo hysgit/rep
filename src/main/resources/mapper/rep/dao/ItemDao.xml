@@ -41,6 +41,7 @@
   <select id="getAll" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/>
     from item
+    order by type_id
   </select>
   <select id="getBySerialNumber" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/>

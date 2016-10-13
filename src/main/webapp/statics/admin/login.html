@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>登陆</title>
+    <link href="/statics/css/bootstrap.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/statics/css/preset.css">
+    <link/>
+    <script src="/statics/js/jquery.min.js"></script>
+    <script src="/statics/js/bootstrap.min.js"></script>
+    <script src="/statics/js/jQuery.md5.js"></script>
+
+</head>
+<body style="margin:20%">
+<!--<form class="table" id="formid" action="/user/login" method="post" enctype="text/plain">-->
+    <label>用户名1:<input type="text" id="username"></label>
+    <label>密码:<input type="password" id="password"></label>
+    <input type="button" id="btnsubmit" value="登陆">
+<!--</form>-->
+
+
+<script>
+
+    $(function () {
+        $("#btnsubmit").click(function () {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            console.log(username + " " + password);
+
+            if(username==null || username=="" || username == undefined)
+            {
+                return;
+            }
+            if(password==null || password=="" || password == undefined)
+            {
+                return;
+            }
+
+            var passwordStr = $.md5(password);
+
+
+            var params ={
+                "userName":username,
+                "password":passwordStr
+            };
+            console.log(params);
+            $.ajax({
+                type: "POST",//请求方式，get或post
+                url: "/user/login",
+                data: JSON.stringify(params),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                timeout: 15000,  //超时时间设置，单位毫秒
+                error: function (XmlHttpRequest, textStatus, errorThrown) {
+                    console.log(XmlHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    alert('系统繁忙,请稍后再试');
+                },
+                success: function (data) {
+                    console.log(data);
+                    if(data.code != 0) {
+                        alert(data.message);
+                    }
+                    window.location = data.data;
+                }
+            });
+        });
+    });
+
+</script>
+
+</body>
+</html>

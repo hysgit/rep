@@ -74,12 +74,12 @@ public class LoginController {
         session.invalidate();
         apiResult.setCode(0);
         apiResult.setMessage("注销成功");
-        apiResult.setData("/index.html");
+        apiResult.setData("/statics/admin/login.html");
 
         return apiResult.toString();
     }
 
-    @RequestMapping(value = "/nologin",consumes = "application/json",
+    @RequestMapping(value = "/nologin",
             produces = "application/json;charset=utf-8")
     @ResponseBody
     public String nologin() {

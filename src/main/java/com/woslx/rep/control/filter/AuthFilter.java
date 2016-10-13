@@ -36,6 +36,7 @@ public class AuthFilter implements Filter {
                     ||(requestURI.equals("/statics/admin/login.html"))
                     ||(requestURI.equals("/user/nologin"))
                     ||(requestURI.equals("/favicon.ico"))
+
                     )
             {
                 chain.doFilter(request,response);
@@ -46,7 +47,7 @@ public class AuthFilter implements Filter {
             }
             else
             {
-                if(requestURI.endsWith(".html"))
+                if(requestURI.endsWith(".html") ||(requestURI.equals("/")))
                 {
                     request.getRequestDispatcher("/statics/admin/login.html").forward(request,response);
                 }

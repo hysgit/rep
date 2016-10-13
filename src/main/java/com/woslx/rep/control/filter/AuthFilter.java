@@ -20,11 +20,9 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
 
-
-
         Object attribute = session.getAttribute("username");
         String requestURI = req.getRequestURI();
-        System.out.println(requestURI);
+
         if((attribute==null))//未登陆
         {
             if((requestURI.equals("/user/login"))

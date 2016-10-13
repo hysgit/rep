@@ -35,13 +35,13 @@
 </div>
 
 <div class="form-group form-inline">
-    <span>商品类型：</span><span id="typename"></span><span style="width:5px;"></span>
-    <span>商品名称：</span><span id="name"></span><span style="width:5px;"></span>
-    <span>商品编码：</span><span id="sn"></span><span style="width:5px;"></span>
-    <span>商品规格：</span><span id="spec"></span><span style="width:5px;"></span>
-    <span>总入库： </span><span id="allin"></span><span style="width:5px;"></span>
-    <span>总出库：</span><span id="allout"></span><span style="width:5px;"></span>
-    <span>当前数量：</span><span id="cur"></span>
+    <span>类型：</span><span style="color:darkmagenta;" id="typename"></span><label style="width:20px;"></label>
+    <span>名称：</span><span style="color:goldenrod;" id="name"></span><label style="width:20px;"></label>
+    <span>编码：</span><span style="color:maroon;" id="sn"></span><label style="width:20px;"></label>
+    <span>规格：</span><span style="color:blue;" id="spec"></span><label style="width:20px;"></label>
+    <span>总入库：</span><span style="color:#4cae4c;" id="allin"></span><label style="width:20px;"></label>
+    <span>总出库：</span><span style="color:red;" id="allout"></span><label style="width:20px;"></label>
+    <span>当前数量：</span><span style="color:orangered;" id="cur"></span>
 </div>
 <table id="tableindex" class="table table-striped table-bordered table-hover">
 <thead>
@@ -92,13 +92,13 @@
                     console.log(data);
                     if(0 == data.code) {
                         var res = data.data;
-                        $("#typename").val(res.typeName);
-                        $("#name").val(res.itemName);
-                        $("#sn").val(res.sn);
-                        $("#spec").val(res.spec);
-                        $("#allin").val(res.allIn);
-                        $("#allout").val(res.allOut);
-                        $("#cur").val(res.cur);
+                        $("#typename").text(res.typeName);
+                        $("#name").text(res.itemName);
+                        $("#sn").text(res.sn);
+                        $("#spec").text(res.spec);
+                        $("#allin").text(res.allIn);
+                        $("#allout").text(res.allOut);
+                        $("#cur").text(res.cur);
 
                         var list = res.list;
                         for(var cnt=0; cnt < list.length; cnt++)

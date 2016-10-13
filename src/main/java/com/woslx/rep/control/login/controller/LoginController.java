@@ -46,7 +46,7 @@ public class LoginController {
             if(userName.equals("wyy") &&(md5.equals(password)))
             {
                 HttpSession session = request.getSession();
-                session.setMaxInactiveInterval(10);
+                session.setMaxInactiveInterval(1800);
                 session.setAttribute("username", "wyy");
                 apiResult.setCode(0);
                 apiResult.setMessage("登录成功");

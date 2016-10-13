@@ -11,37 +11,43 @@
     <script src="/statics/js/jQuery.md5.js"></script>
 
 </head>
-<body style="margin:20%">
+<body>
 <!--<form class="table" id="formid" action="/user/login" method="post" enctype="text/plain">-->
-    <label>用户名1:<input type="text" id="username"></label>
-    <label>密码:<input type="password" id="password"></label>
-    <input type="button" id="btnsubmit" value="登陆">
+<form class="form">
+    <div class="form-group form-inline">
+        <label style="width:50px;" for="username">用户名:</label><input type="text" class="form-control" id="username">
+    </div>
+    <div class="form-group form-inline">
+        <label style="width:50px;" for="password">密码:</label><input type="password" class="form-control" id="password">
+    </div>
+    <div class="form-group form-inline">
+        <input type="button" class="form-control" id="btnsubmit" value="登陆">
+    </div>
+</form>
 <!--</form>-->
 
 
 <script>
 
     $(function () {
-        $("#btnsubmit").click(function () {
+
+        var login = function () {
             var username = $("#username").val();
             var password = $("#password").val();
             console.log(username + " " + password);
-
-            if(username==null || username=="" || username == undefined)
-            {
+            if (username == null || username == "" || username == undefined) {
                 return;
             }
-            if(password==null || password=="" || password == undefined)
-            {
+            if (password == null || password == "" || password == undefined) {
                 return;
             }
 
             var passwordStr = $.md5(password);
 
 
-            var params ={
-                "userName":username,
-                "password":passwordStr
+            var params = {
+                "userName": username,
+                "password": passwordStr
             };
             console.log(params);
             $.ajax({
@@ -59,12 +65,20 @@
                 },
                 success: function (data) {
                     console.log(data);
-                    if(data.code != 0) {
+                    if (data.code != 0) {
                         alert(data.message);
                     }
                     window.location = data.data;
                 }
             });
+        };
+
+        $("#btnsubmit").click(login);
+
+        $("#password").keydown(function () {
+            if (event.keyCode == 13) {
+                login();
+            }
         });
     });
 

@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by hy on 10/12/16.
@@ -22,11 +23,18 @@ public class AuthFilter implements Filter {
 
         Object attribute = session.getAttribute("username");
         String requestURI = req.getRequestURI();
-
+        long lastAccessedTime = session.getLastAccessedTime();
+        long now = new Date().getTime();
+        if(now-lastAccessedTime > session.getMaxInactiveInterval()*1000)
+        {
+            session.removeAttribute("username");
+            attribute=null;
+        }
         if((attribute==null))//未登陆
         {
             if((requestURI.equals("/user/login"))
                     ||(requestURI.equals("/statics/admin/login.html"))
+                    ||(requestURI.equals("/user/nologin"))
                     ||(requestURI.equals("/favicon.ico"))
                     )
             {
@@ -38,7 +46,13 @@ public class AuthFilter implements Filter {
             }
             else
             {
-                request.getRequestDispatcher("/statics/admin/login.html").forward(request,response);
+                if(requestURI.endsWith(".html"))
+                {
+                    request.getRequestDispatcher("/statics/admin/login.html").forward(request,response);
+                }
+                else {
+                    request.getRequestDispatcher("/user/nologin").forward(request,response);
+                }
             }
         }
         else {

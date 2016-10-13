@@ -8,6 +8,7 @@
     <link/>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/cus.js"></script>
 </head>
 <body>
 <h2>出入库管理系统</h2>
@@ -19,6 +20,7 @@
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation" class="active"><a href="#">添加名称</a></li>
     <li role="presentation"><a href="additem.html">添加商品</a>
+    <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
 </ul>
 <p></p>
 <form  role="form" action="javascript:void(0);">
@@ -73,6 +75,10 @@
                     $("#btnSave").removeAttr("disabled");
                     if (0 == data.code) {
                         alert("添加成功");
+                    }
+                    else if(1000 == data.code){
+                        alert(data.message);
+                        window.location=data.data;
                     }
                     else {
                         alert(data.message);

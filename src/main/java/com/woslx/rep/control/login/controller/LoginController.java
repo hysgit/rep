@@ -46,6 +46,7 @@ public class LoginController {
             if(userName.equals("wyy") &&(md5.equals(password)))
             {
                 HttpSession session = request.getSession();
+                session.setMaxInactiveInterval(10);
                 session.setAttribute("username", "wyy");
                 apiResult.setCode(0);
                 apiResult.setMessage("登录成功");
@@ -59,5 +60,32 @@ public class LoginController {
 
             return apiResult.toString();
         }
+    }
+
+    @RequestMapping(value = "/logout",consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String logout(HttpServletRequest request) {
+
+        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+
+        HttpSession session = request.getSession();
+        session.removeAttribute("username");
+        session.invalidate();
+        apiResult.setCode(0);
+        apiResult.setMessage("注销成功");
+        apiResult.setData("/index.html");
+
+        return apiResult.toString();
+    }
+
+    @RequestMapping(value = "/nologin",consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String nologin() {
+
+        ApiResult<String> apiResult = new ApiResult<>(1000, "你已经超时或未登陆，请重新登陆","/statics/admin/login.html");
+
+        return apiResult.toString();
     }
 }

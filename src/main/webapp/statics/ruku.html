@@ -300,6 +300,13 @@
 
     $(function(){
 
+        var as = $("ul li a");
+
+        for(var ay = 0;ay < as.length;ay++) {
+            var href = as[ay].href;
+            as[ay].href = href +"?_t="+new Date().getTime();
+        }
+
         $("#itemInType").click(function(event){
             var value = $("#itemInType").val();
             if(value!=2)

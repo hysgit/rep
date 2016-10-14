@@ -71,6 +71,13 @@
 <script>
     $(function () {
 
+        var as = $("ul li a");
+
+        for(var ay = 0;ay < as.length;ay++) {
+            var href = as[ay].href;
+            as[ay].href = href +"?_t="+new Date().getTime();
+        }
+
         //选择商品类型按钮
         $("#itemTypeId").change(function (event) {
             var itemTypeId = $("#itemTypeId").val();

@@ -64,6 +64,12 @@
 
 <script>
     $(function () {
+        var as = $("ul li a");
+
+        for(var ay = 0;ay < as.length;ay++) {
+            var href = as[ay].href;
+            as[ay].href = href +"?_t="+new Date().getTime();
+        }
 
         $("#btnquery").click(function(){
             var serialNumber = $("#transactionalNumber").val().trim();

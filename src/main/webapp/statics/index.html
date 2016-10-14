@@ -49,6 +49,12 @@
 <script>
 
     $(function () {
+        var as = $("ul li a");
+
+        for(var ay = 0;ay < as.length;ay++) {
+            var href = as[ay].href;
+            as[ay].href = href +"?_t="+new Date().getTime();
+        }
 
         $.ajax({
             type: "POST",//请求方式，get或post

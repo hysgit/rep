@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * Created by hy on 10/12/16.
@@ -35,7 +36,7 @@ public class LoginController {
         if(StringUtils.isEmpty(userLogin.getUserName()) || StringUtils.isEmpty(userLogin.getPassword())) {
             apiResult.setCode(1);
             apiResult.setMessage("登录失败");
-            apiResult.setData("/statics/admin/login.html");
+            apiResult.setData("/statics/admin/login.html?_t="+new Date().getTime());
             //response.setHeader("refresh","0;URL=/statics/admin/login.html");
             return apiResult.toString();
         }
@@ -50,12 +51,12 @@ public class LoginController {
                 session.setAttribute("username", "wyy");
                 apiResult.setCode(0);
                 apiResult.setMessage("登录成功");
-                apiResult.setData("/index.html");
+                apiResult.setData("/index.html?_t="+new Date().getTime());
             }
             else {
                 apiResult.setCode(1);
                 apiResult.setMessage("登录失败");
-                apiResult.setData("/statics/admin/login.html");
+                apiResult.setData("/statics/admin/login.html?_t="+new Date().getTime());
             }
 
             return apiResult.toString();
@@ -74,7 +75,7 @@ public class LoginController {
         session.invalidate();
         apiResult.setCode(0);
         apiResult.setMessage("注销成功");
-        apiResult.setData("/statics/admin/login.html");
+        apiResult.setData("/statics/admin/login.html?_t="+new Date().getTime());
 
         return apiResult.toString();
     }
@@ -84,7 +85,7 @@ public class LoginController {
     @ResponseBody
     public String nologin() {
 
-        ApiResult<String> apiResult = new ApiResult<>(1000, "你已经超时或未登陆，请重新登陆","/statics/admin/login.html");
+        ApiResult<String> apiResult = new ApiResult<>(1000, "你已经超时或未登陆，请重新登陆","/statics/admin/login.html?_t="+new Date().getTime());
 
         return apiResult.toString();
     }

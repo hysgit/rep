@@ -219,6 +219,12 @@
 
 
     $(function () {
+        var as = $("ul li a");
+
+        for(var ay = 0;ay < as.length;ay++) {
+            var href = as[ay].href;
+            as[ay].href = href +"?_t="+new Date().getTime();
+        }
 
         function add_shoushu()
         {

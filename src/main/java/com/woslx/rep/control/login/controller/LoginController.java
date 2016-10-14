@@ -43,7 +43,7 @@ public class LoginController {
         else {
             String userName = userLogin.getUserName();
             String password = userLogin.getPassword().toLowerCase();
-            String md5 = AppUtils.MD5("xyz123").toLowerCase();
+            String md5 = AppUtils.MD5("wyy1314").toLowerCase();
             if(userName.equals("wyy") &&(md5.equals(password)))
             {
                 HttpSession session = request.getSession();

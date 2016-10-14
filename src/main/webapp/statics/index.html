@@ -81,6 +81,15 @@
                         return;
                     }
 
+                    var datalink = "{"+
+                    "'F':'778317EA',"+
+                            "'F1':'BD73F1E4',"+
+                            "'F2':'4CA6DE6B',"+
+                            "'F3':'54E5342F',"+
+                            "'T':'1476417885',"+
+                            "'y':'FDFBDFF2'"+
+
+                "}";
                     var datalen = arr.length;
                     for (var i = 0; i < datalen; i++) {
                         var item = arr[i];
@@ -88,7 +97,7 @@
                         $('#table_body').append('<tr id="state' + i + '">' +
                                 '<td>' + item.typeName + '</td>' +
                                 '<td>' + item.name + '</td>' +
-                                '<td>' + '<a href="/statics/detail.html?_t='+new Date().getTime()+'&sn='+sn+'">'+sn+'</a></td>' +
+                                '<td>' + '<a data-click=datalink target="_blank" href="/statics/detail.html?_t='+new Date().getTime()+'&sn='+sn+'">'+sn+'</a></td>' +
                                 '<td>' + item.specifications + '</td>' +
                                 '<td>' + item.quantityAll + '</td>' +
                                 '<td>' + item.quantityUse + '</td>' +

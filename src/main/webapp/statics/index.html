@@ -84,11 +84,12 @@
                     var datalen = arr.length;
                     for (var i = 0; i < datalen; i++) {
                         var item = arr[i];
+                        var sn = item.serialNumber;
                         $('#table_body').append('<tr id="state' + i + '">' +
                                 '<td>' + item.typeName + '</td>' +
                                 '<td>' + item.name + '</td>' +
                                 '<td>' + item.serialNumber + '</td>' +
-                                '<td>' + item.specifications + '</td>' +
+                                '<td>' + '<a href="/statics/detail.html?_t='+new Date().getTime()+'&sn='+sn+'">'+sn+'</a></td>' +
                                 '<td>' + item.quantityAll + '</td>' +
                                 '<td>' + item.quantityUse + '</td>' +
                                 '<td>' + item.quantityCurrent + '</td></tr>');

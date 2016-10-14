@@ -18,13 +18,15 @@
 <h2>出入库管理系统</h2>
 <p></p>
 <ul class="nav nav-pills" role="tablist">
-    <li role="presentation" ><a href="index.html">查询库存</a></li>
+    <li role="presentation"><a href="index.html">查询库存</a></li>
     <li role="presentation" class="active"><a href="#">出入记录</a></li>
     <li role="presentation"><a href="ruku.html">新增入库</a></li>
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
     <li role="presentation"><a href="additem.html">添加商品</a>
-    <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
+    <li>
+        <button id="logout" class="btn btn-warning" type="button">退出</button>
+    </li>
 </ul>
 <p></p>
 
@@ -44,45 +46,45 @@
     <span>当前数量：</span><span style="color:orangered;" id="cur"></span>
 </div>
 <table id="tableindex" class="table table-striped table-bordered table-hover">
-<thead>
-<tr>
-    <th><span>出入库类型</span></th>
-    <th><span>流水单号</span></th>
-    <th><span>出入库前</span></th>
-    <th><span>数量</span></th>
-    <th><span>出入库后</span></th>
-    <th><span>医生姓名</span></th>
-    <th><span>跟台人</span></th>
-    <th><span>时间</span></th>
-</tr>
-</thead>
-<tbody id="table_body">
+    <thead>
+    <tr>
+        <th><span>出入库类型</span></th>
+        <th><span>流水单号</span></th>
+        <th><span>出入库前</span></th>
+        <th><span>数量</span></th>
+        <th><span>出入库后</span></th>
+        <th><span>医生姓名</span></th>
+        <th><span>跟台人</span></th>
+        <th><span>时间</span></th>
+    </tr>
+    </thead>
+    <tbody id="table_body">
 
 
-</tbody>
+    </tbody>
 </table>
 
 <script>
     $(function () {
         var as = $("ul li a");
 
-        for(var ay = 0;ay < as.length;ay++) {
+        for (var ay = 0; ay < as.length; ay++) {
             var href = as[ay].href;
-            as[ay].href = href +"?_t="+new Date().getTime();
+            as[ay].href = href + "?_t=" + new Date().getTime();
         }
 
-        $("#btnquery").click(function(){
+        var doQuery = function () {
             var serialNumber = $("#transactionalNumber").val().trim();
 
-            if(serialNumber == "" || serialNumber == null)
-            {
+            if (serialNumber == "" || serialNumber == null) {
                 alert("请输入编号");
-                return ;
+                return;
             }
 
             var params = {
-                "sn":serialNumber
+                "sn": serialNumber
             };
+
             $.ajax({
                 type: "POST",//请求方式，get或post
                 url: "/records/query/by/sn",
@@ -96,7 +98,7 @@
                 success: function (data) {
                     $("#table_body").empty();
                     console.log(data);
-                    if(0 == data.code) {
+                    if (0 == data.code) {
                         var res = data.data;
                         $("#typename").text(res.typeName);
                         $("#name").text(res.itemName);
@@ -107,38 +109,49 @@
                         $("#cur").text(res.cur);
 
                         var list = res.list;
-                        for(var cnt=0; cnt < list.length; cnt++)
-                        {
+                        for (var cnt = 0; cnt < list.length; cnt++) {
                             var x = list[cnt];
                             var inout = x.inOutType;
                             $("#table_body").append(
                                     '<tr>' +
-                                    '<td>'+x.inOutType +'</td>'+
-                                    '<td>'+((x.transn==undefined)?"":x.transn) +'</td>'+
-                                    '<td>'+x.before +'</td>'+
-                                    '<td>'+((x.inOutType=='出库')?'<label style="color:red;">-</label>':'<label style="color:blueviolet;">+</label>')+x.now +'</td>' +
-                                    '<td>'+x.after +'</td>' +
-                                    '<td>'+((x.docName==undefined)?"":x.docName) +'</td>' +
-                                    '<td>'+((x.gentai==undefined)?"":x.gentai) +'</td>' +
-                                    '<td>'+((x.date==undefined)?"":x.date) +'</td>' +
+                                    '<td>' + x.inOutType + '</td>' +
+                                    '<td>' + ((x.transn == undefined) ? "" : x.transn) + '</td>' +
+                                    '<td>' + x.before + '</td>' +
+                                    '<td>' + ((x.inOutType == '出库') ? '<label style="color:red;">-</label>' : '<label style="color:blueviolet;">+</label>') + x.now + '</td>' +
+                                    '<td>' + x.after + '</td>' +
+                                    '<td>' + ((x.docName == undefined) ? "" : x.docName) + '</td>' +
+                                    '<td>' + ((x.gentai == undefined) ? "" : x.gentai) + '</td>' +
+                                    '<td>' + ((x.date == undefined) ? "" : x.date) + '</td>' +
                                     '</tr>'
                             );
                         }
                     }
-                    else if(1000 == data.code){
+                    else if (1000 == data.code) {
                         alert(data.message);
-                        window.location=data.data;
+                        window.location = data.data;
                     }
-                    else
-                    {
+                    else {
                         alert(data.message);
                     }
                 }
             });
-        });
+        };
 
+        $("#btnquery").click(doQuery);
 
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
 
+        var sn = getQueryString("sn");
+
+        if (sn != null) {
+            $("#transactionalNumber").val(sn);
+            doQuery();
+        }
 
 
     });

@@ -52,7 +52,7 @@
     select <include refid="Base_Column_List"/>
     from records
     where item_id=#{itemId,jdbcType=INTEGER}
-    order by desc create_time;
+    order by desc create_time
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

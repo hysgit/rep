@@ -46,51 +46,65 @@
     </div>
 </div>
 
-<div id="queryCdn" class="form-group form-inline">
-
-</div>
-
-
-<div class="form-group form-inline">
-    <label>医生:</label>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor"> 徐三中</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor"> 陈斌</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor"> 凌志恒</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor"> 顾鹏程</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor"> 陈中</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor"> 张玉柱</label></div>
-</div>
-
-<div class="form-group form-inline">
-    <div class="checkbox"><label>跟台:</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="gentai"> 杨昕</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="gentai"> 李荣兵</label></div>
-    <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="gentai"> 车佳莲</label></div>
-</div>
-
-<div class="form-group form-inline">
-    <div class="checkbox"><label>时间:</label></div>
-    <div class="form-group">
-        <label for="dtp_input2" class="control-label"></label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy年mm月dd日" data-link-field="dtp_input2"
-             data-link-format="yyyy-mm-dd">
-            <input class="form-control" size="12" type="text" value="" readonly>
-            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-        </div>
-        <input type="hidden" id="dtp_input2" value=""/><br/>
-    </div>
-
-    <div class="form-group">
-        <label for="dtp_input3" class="control-label">至：</label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy年mm月dd日" data-link-field="dtp_input3"
-             data-link-format="yyyy-mm-dd">
-            <input class="form-control" size="12" type="text" value="" readonly>
-            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-        </div>
-        <input type="hidden" id="dtp_input3" value=""/><br/>
+<div id="queryCdn" style="display: none" class="form-group form-inline">
+    <div class="form-group form-inline">
+        <label for="zhuanyuan_no">住院号:</label>
+        <label><input type="text" id="zhuanyuan_no" class="form-control"></label>
     </div>
 </div>
 
+<div id="mutil" style="display: none">
+    <div class="form-group form-inline">
+        <label>医生:</label>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor" value="徐三中"> 徐三中</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor" value="陈斌"> 陈斌</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor" value="凌志恒"> 凌志恒</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor" value="顾鹏程"> 顾鹏程</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor" value="陈中"> 陈中</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="doctor" value="张玉柱"> 张玉柱</label>
+        </div>
+    </div>
+
+    <div class="form-group form-inline">
+        <div class="checkbox"><label>跟台:</label></div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="gentai" value="杨昕"> 杨昕</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="gentai" value="李荣兵"> 李荣兵</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="gentai" value="车佳莲"> 车佳莲</label>
+        </div>
+    </div>
+
+    <div class="form-group form-inline">
+        <div class="checkbox"><label>时间:</label></div>
+        <div class="form-group">
+            <label for="dtp_input2" class="control-label"></label>
+            <div class="input-group date form_date" data-date="" data-date-format="yyyy年mm月dd日"
+                 data-link-field="dtp_input2"
+                 data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="12" type="text" value="" readonly>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <input type="hidden" id="dtp_input2" value=""/><br/>
+        </div>
+
+        <div class="form-group">
+            <label for="dtp_input3" class="control-label">至：</label>
+            <div class="input-group date form_date" data-date="" data-date-format="yyyy年mm月dd日"
+                 data-link-field="dtp_input3"
+                 data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="12" type="text" value="" readonly>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <input type="hidden" id="dtp_input3" value=""/><br/>
+        </div>
+    </div>
+</div>
 <div class="form-group">
     <input id="btnQuery" type="button" class="btn btn-default " value="查询"/>
 </div>
@@ -327,24 +341,16 @@
     }
 
     function addQueryConditionByZhuanyuanNo() {
-        $("#queryCdn").empty();
-        $("#queryCdn").append(
-                '<div class="form-group form-inline">' +
-                '<label for="zhuanyuan_no">住院号:</label>' +
-                '<label><input type="text" id="zhuanyuan_no" class="form-control"></label>' +
-                '</div>'
-        );
+        $("#mutil").hide();
+        $("#queryCdn").show();
     }
     function addQueryMutilCondition() {
-        $("#queryCdn").empty();
-        $("#queryCdn").append(
-
-        );
+        $("#queryCdn").hide();
+        $("#mutil").show();
     }
 
     $(function () {
         addQueryMutilCondition();
-
 
         $('.form_date').datetimepicker({
             language: 'zh-CN',
@@ -381,9 +387,9 @@
 
 
     $('.form_date').datetimepicker({
-        language:  'zh-CN',
+        language: 'zh-CN',
         weekStart: 1,
-        todayBtn:  1,
+        todayBtn: 1,
         autoclose: 1,
         todayHighlight: 1,
         startView: 2,

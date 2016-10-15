@@ -126,208 +126,93 @@
 
 
 <script>
-    var i = 1;
-    function add_a_new_line(ix) {
-        $("#table_body").append('<tr>' +
-                '<td><select id="itemTypeId' + ix + '" class="form-control">' +
-                '<option disabled selected value="0">请选择</option>' +
-                '<option value="1">脊柱</option>' +
-                '<option value="2">创伤</option>' +
-                '</select></td>' +
-                '<td><select style="width:200px;" id="itemNameId' + ix + '" class="form-control"></select> </td>' +
-                '<td><select style="width:200px;" id="itemId' + ix + '" class="form-control"></select></td>' +
-                '<td><input type="text" class="form-control" id="quality' + ix + '" placeholder="数量,必填"></td>' +
-                '<td><input type="text" class="form-control" id="src' + ix + '" placeholder="请出入来源"></td></tr>');
+    var queryType = 1;
 
-        i = i + 1;
-
-        $('#itemTypeId' + ix).click(function (event) {
-            var itemTypeId = $('#itemTypeId' + ix).val();
-            if (itemTypeId == 0 || itemTypeId == undefined) {
-                return;
-            }
-            var obj = {
-                "typeId": itemTypeId
-            };
-
-            $.ajax({
-                type: "POST",//请求方式，get或post
-                url: "/item/name/get/by/typeid",
-                data: JSON.stringify(obj),
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                timeout: 15000,  //超时时间设置，单位毫秒
-                error: function (XmlHttpRequest, textStatus, errorThrown) {
-
-                    alert('系统繁忙,请稍后再试');
-                },
-                success: function (data) {
-                    if (0 == data.code) {
-                        $('#itemNameId' + ix).empty();  //清除子节点
-                        $('#itemId' + ix).empty();  //清除子节点
-
-                        var arr = data.data;
-                        if (arr == undefined) {
-                            alert("该类型无商品名");
-
-                            return;
-                        }
-                        else if (arr.length == 0) {
-                            alert("该类型无商品名");
-
-                            return;
-                        }
-
-                        var datalen = arr.length;
-                        $('#itemNameId' + ix).append('<option disabled selected></option>');
-                        for (var i = 0; i < datalen; i++) {
-                            var itemName = arr[i];
-                            $('#itemNameId' + ix).append("<option value='" + itemName.id + "'>" + itemName.name + "</option>");
-                        }
-                    }
-                    else if (1000 == data.code) {
-                        alert(data.message);
-                        window.location = data.data;
-                    }
-                    else {
-                        alert(data.message);
-                    }
-                }
-            });
-        });
-
-
-        $('#itemNameId' + ix).click(function (event) {
-            var nameId = $('#itemNameId' + ix).val();
-
-            if (nameId == 0 || nameId == undefined) {
-                return;
-            }
-
-
-            var obj = {
-                "nameId": nameId
-            };
-
-            $.ajax({
-                type: "POST",//请求方式，get或post
-                url: "/item/get/by/nameid",
-                data: JSON.stringify(obj),
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                timeout: 15000,  //超时时间设置，单位毫秒
-                error: function (XmlHttpRequest, textStatus, errorThrown) {
-
-                    alert('系统繁忙,请稍后再试');
-                },
-                success: function (data) {
-                    if (0 == data.code) {
-                        $('#itemId' + ix).empty();  //清除子节点
-                        var arr = data.data;
-                        if (arr == undefined) {
-                            alert("该商品名称无商品");
-
-                            return;
-                        }
-                        else if (arr.length == 0) {
-                            alert("该商品名称无商品");
-
-                            return;
-                        }
-
-                        var datalen = arr.length;
-                        $('#itemId' + ix).append('<option disabled selected></option>');
-                        for (var i = 0; i < datalen; i++) {
-                            var item = arr[i];
-                            $('#itemId' + ix).append("<option value='" + item.id + "'>" + item.specifications + "</option>");
-                        }
-                    }
-                    else if (1000 == data.code) {
-                        alert(data.message);
-                        window.location = data.data;
-                    }
-                    else {
-                        alert(data.message);
-                    }
-                }
-            });
-        });
+    function addQueryConditionByZhuanyuanNo() {
+        queryType = 2;
+        $("#mutil").hide();
+        $("#queryCdn").show();
     }
 
-    function save_ruku_data() {
-        var itemInType = $("#itemInType").val();     //入库类型
+    function addQueryMutilCondition() {
+        queryType = 1;
+        $("#queryCdn").hide();
+        $("#mutil").show();
+    }
 
-        var transactionalNumber = $("#transactionalNumber").val().trim();      //单号
+    function doQuery(){
+        var zhuyuanNo = $("#zhuanyuan_no").val();
 
-        //只有补货有单号，其他情况填写垃圾单号
-        if (itemInType != 2) {
-            transactionalNumber = "xx11111111111111111";
+        if(queryType == 2) {
+            if (zhuyuanNo == "") {
+                alert("住院号不能为空");
+                return;
+            }
         }
+        var params = {
+            "queryType":queryType
+        };
 
-        if (transactionalNumber == null || transactionalNumber == undefined || transactionalNumber == "") {
-            alert("流水单号必须写");
+        if(queryType == 2)
+        {
+            params.zhuyuanNO = zhuyuanNo;
+        }
+        else
+        {
+            var start = $("#dtp_input2").val();
+            var end = $("#dtp_input3").val();
+            params.start = start;
+            params.end = end;
+            var docnames = $("input[name='doctor']:checked");
+            var gentais = $("input[name='gentai']:checked");
+
+            var docnameslen = docnames.length;
+            if(docnameslen>0)
+            {
+                var arrdocnames = new Array();
+                for(var cnt = 0; cnt < docnameslen; cnt++)
+                {
+                    arrdocnames[cnt] = docnames[cnt].value;
+                }
+                params.docNameList = arrdocnames;
+            }
+
+            var gentailen = gentais.length;
+            if(gentailen>0)
+            {
+                var arrgentais = new Array();
+                for(var cnt = 0; cnt < gentailen; cnt++)
+                {
+                    arrgentais[cnt] = gentais[cnt].value;
+                }
+                params.gentaiList = arrgentais;
+            }
+
+
+//            console.log(docnames);
+//            console.log(tentan);
+            console.log(params);
             return;
         }
 
-        var dateStart = $("#dtp_input2").val();          //获取到日期值
-        var dateEnd = $("#dtp_input3").val();          //获取到日期值
-
-        var array = [];//定义一个数组
-
-        var len = $("#table_body tr").length;        //表格行数
-        console.log(len);
-        for (var row = 1; row < len + 1; row++) {
-            var obj = {};
-            obj.itemId = $("#itemId" + row).val().trim();
-            var typeId = $("#itemTypeId" + row).val().trim();
-            var nameId = $("#itemNameId" + row).val().trim();
-            obj.quality = Math.round(parseFloat($("#quality" + row).val().trim()) * 10);
-
-            if (obj.itemId == null || typeId == null || nameId == null || isNaN(obj.quality) || obj.quality < 1) {
-                alert("必填项必须填写！");
-                return;
-            }
-
-            var src = $("#src" + row).val();
-            if (src == null || src == undefined || "" == src.trim()) {
-
-            }
-            else {
-                obj.src = $("#src" + row).val();
-            }
-
-            console.log(obj);
-            array[row - 1] = obj;
-
-        }
-
-        var params = {
-            "itemInType": itemInType,
-            "transactionalNumber": transactionalNumber,
-            "date": date,
-            "list": array
-        };
         console.log(JSON.stringify(params));
-        $("#btnSave").attr({"disabled": "disabled"});
+        //$("#btnSave").attr({"disabled": "disabled"});
         $.ajax({
             type: "POST",//请求方式，get或post
-            url: "/records/create/ruku",
+            url: "/records/query",
             data: JSON.stringify(params),
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             timeout: 15000,  //超时时间设置，单位毫秒
             error: function (XmlHttpRequest, textStatus, errorThrown) {
-                $("#btnSave").removeAttr("disabled");
+                //$("#btnSave").removeAttr("disabled");
                 alert('系统繁忙,请稍后再试');
             },
             success: function (data) {
-                $("#btnSave").removeAttr("disabled");
+                //$("#btnSave").removeAttr("disabled");
+                console.log(data);
                 if (data.code == 0) {
-                    alert('入库成功');
-                    $("#transactionalNumber").val("");
-                    $("#table_body").empty();
-                    i = 1;
-                    add_a_new_line(i);
+
                 } else if (1000 == data.code) {
                     alert(data.message);
                     window.location = data.data;
@@ -338,19 +223,11 @@
             }
         });
 
-    }
 
-    function addQueryConditionByZhuanyuanNo() {
-        $("#mutil").hide();
-        $("#queryCdn").show();
-    }
-    function addQueryMutilCondition() {
-        $("#queryCdn").hide();
-        $("#mutil").show();
     }
 
     $(function () {
-        addQueryMutilCondition();
+        addQueryMutilCondition();       //默认多条件查询
 
         $('.form_date').datetimepicker({
             language: 'zh-CN',
@@ -363,8 +240,8 @@
             forceParse: 0
         });
 
-        $("#btnSave").click(function (event) {
-            save_ruku_data();
+        $("#btnQuery").click(function (event) {
+            doQuery();
         });
 
     });

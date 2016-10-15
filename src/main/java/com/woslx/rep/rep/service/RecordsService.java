@@ -4,6 +4,7 @@ import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
 import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,4 +22,8 @@ public interface RecordsService {
     List<Records> getByTransactionalNumber(String transactionalNumber);
 
     List<Records> getRecordsByItemId(Integer id);
+
+    List<Records> getRecordsByZhuyuanNo(String zhuyuanNO);
+
+    List<String> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end);
 }

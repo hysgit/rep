@@ -6,6 +6,8 @@ import com.woslx.rep.common.BaseController;
 import com.woslx.rep.common.Constants;
 import com.woslx.rep.rep.entity.*;
 import com.woslx.rep.rep.entity.param.*;
+import com.woslx.rep.rep.entity.vo.Opertion;
+import com.woslx.rep.rep.entity.vo.OpertionMsg;
 import com.woslx.rep.rep.entity.vo.RecordsVO;
 import com.woslx.rep.rep.entity.vo.RecordsVOList;
 import com.woslx.rep.rep.service.ItemNameService;
@@ -179,7 +181,7 @@ public class RecordsController extends BaseController {
                 else {
                     price = item.getPrice();
                     records.setPrice(price);
-                    records.setPricePutIn(0);   //外部设定
+                    records.setPricePutIn(0);   //内设定
                 }
 
                 Integer priceAll = out.getPriceAll();
@@ -190,7 +192,7 @@ public class RecordsController extends BaseController {
                 }
                 else {
                     records.setAllPrice((int)Math.round(price* out.getQuality()/10.0));
-                    records.setAllPricePutIn(0);   //外部设定
+                    records.setAllPricePutIn(0);   //内设定
                 }
             }
 
@@ -274,19 +276,86 @@ public class RecordsController extends BaseController {
      * 查询记录
      * 在同一个接口里实现多种查询功能
      *
-     * @param paramRecordsQueryCondition
+     * @param queryOpertionCondition
      * @return
      */
     @RequestMapping(value = "/query",
             consumes = "application/json",
             produces = "application/json;charset=utf-8")
     @ResponseBody
-    public String query(@RequestBody ParamRecordsQueryCondition paramRecordsQueryCondition) {
-        ApiResult<RecordsVOList> apiResult = new ApiResult<>(0, Constants.SUCCESS);
-        RecordsVOList recordsVOList = new RecordsVOList();
+    public String query(@RequestBody ParamQueryOpertionCondition queryOpertionCondition) {
+        ApiResult<Opertion> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+
+        Opertion opertion = new Opertion();
+
+        Integer queryType = queryOpertionCondition.getQueryType();
+        if(queryType == 1)      //多条件
+        {
+            Date end = queryOpertionCondition.getEnd();
+            Date start = queryOpertionCondition.getStart();
+            List<String> gentaiList = queryOpertionCondition.getGentaiList();
+            List<String> docNameList = queryOpertionCondition.getDocNameList();
+
+            //1. 查询到所有在合适日期内的所有住院号,同时符合医生，跟台人
+            List<String> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, start, end);
 
 
+            //2. 根据住院号查询,查询一个，保存一个
 
+        }
+        else    //按住院号
+        {
+            String zhuyuanNO = queryOpertionCondition.getZhuyuanNO();
+            List<Records> recordsList = recordsService.getRecordsByZhuyuanNo(zhuyuanNO);
+
+            if (recordsList.size() == 0) {
+                apiResult.setCode(1);
+                apiResult.setMessage("未查找到记录");
+                return apiResult.toString();
+            }
+            else {
+                Records records = recordsList.get(0);
+                List<OpertionMsg> msgList = new ArrayList<>();
+                opertion.setList(msgList);
+
+                OpertionMsg opertionMsg = new OpertionMsg();
+                opertionMsg.setDocName(records.getDocterName());
+                opertionMsg.setGentai(records.getGentaiName());
+                opertionMsg.setZhuyuanNo(records.getZhuyuanNo());
+                opertionMsg.setPatientName(records.getPatientName());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+                opertionMsg.setDate(sdf.format(records.getTime()));
+                msgList.add(opertionMsg);
+
+                List<RecordsVO> recordsVOList = new ArrayList<>();
+                opertionMsg.setRecordsVOList(recordsVOList);
+                Integer total = 0;
+                for (Records rtemp : recordsList) {
+                    RecordsVO vo = new RecordsVO();
+                    Integer itemTypeId = rtemp.getItemTypeId();
+                    Integer itemNameId = rtemp.getItemNameId();
+
+                    ItemName itemName = itemNameService.getById(itemNameId);
+                    ItemType itemType = itemTypeService.getById(itemTypeId);
+                    Item item = itemService.getById(rtemp.getItemId());
+                    vo.setItemType(itemType.getName());
+                    vo.setItemName(itemName.getName());
+                    vo.setQuality(rtemp.getQuantity()/10.0);
+                    vo.setPrice(rtemp.getPrice());
+                    vo.setPricePutIn(rtemp.getPricePutIn());
+                    vo.setAllPrice(rtemp.getAllPrice());
+                    vo.setAllPricePutIn(rtemp.getAllPricePutIn());
+                    vo.setItemSpec(item.getSpecifications());
+                    total = total+ rtemp.getAllPrice();
+
+                    recordsVOList.add(vo);
+                }
+                opertionMsg.setTotal(total);
+
+                apiResult.setData(opertion);
+
+            }
+        }
 
         return apiResult.toString();
     }
@@ -294,7 +363,7 @@ public class RecordsController extends BaseController {
 
     /**
      * 查询记录
-     * 在同一个接口里实现多种查询功能
+     * 根据编号查询
      *
      * @param paramRecordsQueryCondition
      * @return
@@ -344,7 +413,7 @@ public class RecordsController extends BaseController {
             vo.setDate(sdf.format(records.getTime()));
             vo.setAfter(records.getQuantityAfter()/10.0);
             vo.setBefore(records.getQuantityBefore()/10.0);
-            vo.setNow(records.getQuantity()/10.0);
+            vo.setQuality(records.getQuantity()/10.0);
             vo.setDocName(records.getDocterName());
             vo.setGentai(records.getGentaiName());
             Integer actionType = records.getActionType();

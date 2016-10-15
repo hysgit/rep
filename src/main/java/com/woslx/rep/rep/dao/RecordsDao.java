@@ -2,7 +2,9 @@ package com.woslx.rep.rep.dao;
 
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RecordsDao {
@@ -23,4 +25,11 @@ public interface RecordsDao {
     List<Records> getByTransactionalNumber(String transactionalNumber);
 
     List<Records> getRecordsByItemId(Integer itemId);
+
+    List<Records> getRecordsByZhuyuanNo(String zhuyuanNO);
+
+    List<String> queryOperation(@Param("docNameList") List<String> docNameList,
+                                @Param("gentaiList")List<String> gentaiList,
+                                @Param("start")Date start,
+                                @Param("end") Date end);
 }

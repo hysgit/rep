@@ -51,4 +51,14 @@ public class RecordsServiceImpl implements RecordsService {
     public List<Records> getRecordsByItemId(Integer itemId) {
         return recordsDao.getRecordsByItemId(itemId);
     }
+
+    @Override
+    public List<Records> getRecordsByZhuyuanNo(String zhuyuanNO) {
+        return recordsDao.getRecordsByZhuyuanNo(zhuyuanNO);
+    }
+
+    @Override
+    public List<String> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end) {
+        return recordsDao.queryOperation(docNameList, gentaiList, start, end);
+    }
 }

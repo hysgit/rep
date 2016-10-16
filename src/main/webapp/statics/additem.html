@@ -23,7 +23,7 @@
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
     <li role="presentation" class="active"><a href="#">添加商品</a>
-    <li role="presentation"><a href="query.html">查询</a>
+    <li role="presentation"><a href="query.html">手术查询</a>
     <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
 </ul>
 
@@ -168,7 +168,7 @@
                 obj.commpany = company;
             }
             $("#btnSave").attr({"disabled":"disabled"});
-            console.log(JSON.stringify(obj));
+            //console.log(JSON.stringify(obj));
             $.ajax({
                 type: "POST",//请求方式，get或post
                 url: "/item/create",

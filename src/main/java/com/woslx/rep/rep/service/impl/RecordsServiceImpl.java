@@ -57,8 +57,8 @@ public class RecordsServiceImpl implements RecordsService {
     }
 
     @Override
-    public List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end) {
-        return recordsDao.queryOperation(docNameList, gentaiList, start, end);
+    public List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList,List<Integer> typeList, Date start, Date end) {
+        return recordsDao.queryOperation(docNameList, gentaiList, typeList, start, end);
     }
 
     @Override

@@ -14,11 +14,21 @@ public class ParamQueryOpertionCondition {
 
     private List<String> gentaiList;
 
+    private List<Integer> typeList;
+
     private String zhuyuanNO;
 
     private Date start;
 
     private Date end;
+
+    public List<Integer> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<Integer> typeList) {
+        this.typeList = typeList;
+    }
 
     public Integer getQueryType() {
         return queryType;

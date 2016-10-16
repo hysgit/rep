@@ -30,6 +30,7 @@ public interface RecordsDao {
 
     List<Integer> queryOperation(@Param("docNameList") List<String> docNameList,
                                 @Param("gentaiList")List<String> gentaiList,
+                                @Param("typeList")List<Integer> typeList,
                                 @Param("start")Date start,
                                 @Param("end") Date end);
 

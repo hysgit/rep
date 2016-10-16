@@ -321,9 +321,10 @@ public class RecordsController extends BaseController {
 
             List<String> gentaiList = queryOpertionCondition.getGentaiList();
             List<String> docNameList = queryOpertionCondition.getDocNameList();
+            List<Integer> typeList = queryOpertionCondition.getTypeList();
 
             //1. 查询到所有在合适日期内的所有手术id,同时符合医生，跟台人
-            List<Integer> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, start, end);
+            List<Integer> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, typeList, start, end);
 
             //2. 根据住院号查询,查询一个，保存一个
             if (zhuyuanNoList.size() == 0) {

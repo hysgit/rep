@@ -26,7 +26,7 @@
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
     <li role="presentation"><a href="additem.html">添加商品</a>
-    <li role="presentation" class="active"><a href="query.html">查询</a>
+    <li role="presentation" class="active"><a href="query.html">手术查询</a>
     <li>
         <button id="logout" class="btn btn-warning" type="button">退出</button>
     </li>
@@ -81,6 +81,14 @@
     </div>
 
     <div class="form-group form-inline">
+        <div class="checkbox"><label>类型:</label></div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="type" value="1"> 脊柱</label>
+        </div>
+        <div class="checkbox"><label style="width: 70px;"><input type="checkbox" name="type" value="2"> 创伤</label>
+        </div>
+    </div>
+
+    <div class="form-group form-inline">
         <div class="checkbox"><label>时间:</label></div>
         <div class="form-group">
             <label for="dtp_input2" class="control-label"></label>
@@ -107,11 +115,13 @@
 </div>
 <div class="form-group">
     <input id="btnQuery" type="button" class="btn btn-default " value="查询"/>
+    <label style="float:right;">合计总额： <label id="all"></label>元</label>
 </div>
 
 <table id="tableres" class="table table-bordered">
     <thead>
     <tr>
+        <th><span>序号</span></th>
         <th><span>日期</span></th>
         <th><span>医生</span></th>
         <th><span>跟台</span></th>
@@ -124,7 +134,7 @@
         <th><span>数量</span></th>
         <th><span>单价</span></th>
         <th><span>总价</span></th>
-        <th><span>总额</span></th>
+        <th><span>总额(元)</span></th>
     </tr>
     </thead>
     <tbody id="table_body">
@@ -171,6 +181,7 @@
             params.end = end;
             var docnames = $("input[name='doctor']:checked");
             var gentais = $("input[name='gentai']:checked");
+            var types = $("input[name='type']:checked");
 
             var docnameslen = docnames.length;
             if (docnameslen > 0) {
@@ -190,11 +201,20 @@
                 params.gentaiList = arrgentais;
             }
 
-            console.log(params);
+            var typelen = types.length;
+            if (typelen > 0) {
+                var typearr = new Array();
+                for (var cnt = 0; cnt < typelen; cnt++) {
+                    typearr[cnt] = types[cnt].value;
+                }
+                params.typeList = typearr;
+            }
+
+            //console.log(params);
             //return;
         }
 
-        console.log(JSON.stringify(params));
+        //console.log(JSON.stringify(params));
         //$("#btnSave").attr({"disabled": "disabled"});
         $.ajax({
             type: "POST",//请求方式，get或post
@@ -209,19 +229,48 @@
             },
             success: function (data) {
                 //$("#btnSave").removeAttr("disabled");
-                console.log(data);
+                //console.log(data);
                 $("#table_body").empty();
+                $("#all").text("");
                 if (data.code == 0) {
                     var allsum = data.data.sum;
                     var arr = data.data.list;
+                    var wan = Math.floor(allsum/10000);
+                    var weiba = allsum%10000;
+                    var moneyall = "";
 
+
+                    if(wan > 0)
+                    {
+                        if(weiba < 1){
+                            moneyall = "0000";
+                        }
+                        else if(weiba < 100)
+                        {
+                            moneyall = "00"+weiba;
+                        }
+                        else if(weiba < 1000)
+                        {
+                            moneyall = "0"+weiba;
+                        }
+                        else
+                        {
+                            moneyall = ""+weiba;
+                        }
+                        moneyall = wan + "," +moneyall;
+                    }
+                    else
+                    {
+                        moneyall = ""+weiba;
+                    }
+                    $("#all").text(moneyall);
                     var len = arr.length;
                     var tabledisplay = '';
                     for (var cnt = 0; cnt < len; cnt++) {
                         var row = arr[cnt];
                         var recordslist = row.recordsVOList;
                         var recordslistlen = recordslist.length;
-                        console.log(row);
+                        //console.log(row);
                         for (var lencnt = 0; lencnt < recordslistlen; lencnt++) {
                             tabledisplay = tabledisplay + '<tr>';
                             var record = recordslist[lencnt];
@@ -231,11 +280,12 @@
                             //console.log(record);
                             if (lencnt == 0) {
                                 tabledisplay = tabledisplay
-                                        + '<td rowspan="' + recordslistlen + '">' + row.date + '</td>'
-                                        + '<td rowspan="' + recordslistlen + '">' + row.docName + '</td>'
-                                        + '<td rowspan="' + recordslistlen + '">' + row.gentai + '</td>'
-                                        + '<td rowspan="' + recordslistlen + '">' + row.patientName + '</td>'
-                                        + '<td rowspan="' + recordslistlen + '">' + row.zhuyuanNo + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + (1+cnt) + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.date + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.docName + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.gentai + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.patientName + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.zhuyuanNo + '</td>'
                                 ;
                             }
                             tabledisplay = tabledisplay + '<td>' + record.itemType + '</td>'
@@ -258,7 +308,7 @@
                                 tabledisplay = tabledisplay + '<td>' + record.allPrice + '</td>';
                             }
                             if (lencnt == 0) {
-                                tabledisplay = tabledisplay +'<td rowspan="' + recordslistlen + '">' + row.total + '</td>'
+                                tabledisplay = tabledisplay +'<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.total + '</td>'
                             }
                             tabledisplay = tabledisplay + '</tr>';
                         }
@@ -303,7 +353,7 @@
 
     function to_change() {
         var obj = document.getElementsByName('condition');
-        console.log(obj);
+        //console.log(obj);
         for (var i = 0; i < obj.length; i++) {
             if (obj[i].checked == true) {
                 if (obj[i].value == '2') {  //住院号

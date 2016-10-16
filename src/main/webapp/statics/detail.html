@@ -24,7 +24,7 @@
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
     <li role="presentation"><a href="additem.html">添加商品</a>
-    <li role="presentation"><a href="query.html">查询</a>
+    <li role="presentation"><a href="query.html">手术查询</a>
     <li>
         <button id="logout" class="btn btn-warning" type="button">退出</button>
     </li>
@@ -98,7 +98,7 @@
                 },
                 success: function (data) {
                     $("#table_body").empty();
-                    console.log(data);
+                    //console.log(data);
                     if (0 == data.code) {
                         var res = data.data;
                         $("#typename").text(res.typeName);

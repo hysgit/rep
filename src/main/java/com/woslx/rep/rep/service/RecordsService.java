@@ -25,7 +25,7 @@ public interface RecordsService {
 
     List<Records> getRecordsByOperationId(Integer operationId);
 
-    List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end);
+    List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList, List<Integer> typeList, Date start, Date end);
 
     List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
 }

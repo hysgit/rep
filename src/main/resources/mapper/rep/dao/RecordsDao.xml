@@ -74,10 +74,10 @@
                      open="(" close=")" separator=",">
                 #{docName}
             </foreach>
-            <if test="gentaiList==null">
+            <if test="gentaiList==null and typeList==null">
                 ) and
             </if>
-            <if test="gentaiList!=null">
+            <if test="gentaiList!=null or typeList!=null">
                 or
             </if>
         </if>
@@ -91,9 +91,26 @@
                      open="(" close=")" separator=",">
                 #{gentai}
             </foreach>
-            ) and
-
+            <if test="typeList==null">
+                ) and
+            </if>
+            <if test="typeList!=null">
+                or
+            </if>
         </if>
+
+        <if test="typeList!=null">
+            <if test="gentaiList==null and docNameList==null">
+                (
+            </if>
+            item_type_id in
+            <foreach collection="typeList" item="typeid" index="index"
+                     open="(" close=")" separator=",">
+                #{typeid}
+            </foreach>
+            ) and
+        </if>
+
         <![CDATA[ (unix_timestamp(`time`) >= unix_timestamp(#{start,jdbcType=TIMESTAMP})) and
          (unix_timestamp(`time`) < unix_timestamp(#{end,jdbcType=TIMESTAMP}))]]>
         and action_detail=101
@@ -102,7 +119,7 @@
         ) as a
     </select>
     <select id="getOperationIdByZhuyuanNo" resultType="java.lang.Integer">
-        select operation_id
+        select DISTINCT operation_id
         from records
         where zhuyuan_no=#{zhuyuanNO,jdbcType=VARCHAR}
     </select>

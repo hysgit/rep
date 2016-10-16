@@ -78,7 +78,7 @@
                 ) and
             </if>
             <if test="gentaiList!=null or typeList!=null">
-                or
+                and
             </if>
         </if>
 
@@ -95,7 +95,7 @@
                 ) and
             </if>
             <if test="typeList!=null">
-                or
+                and
             </if>
         </if>
 

@@ -28,4 +28,6 @@ public interface RecordsService {
     List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList, List<Integer> typeList, Date start, Date end);
 
     List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
+
+    Integer getMaxOperationId();
 }

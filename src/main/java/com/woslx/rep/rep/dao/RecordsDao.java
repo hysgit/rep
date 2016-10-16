@@ -35,4 +35,6 @@ public interface RecordsDao {
                                 @Param("end") Date end);
 
     List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
+
+    Integer getMaxOperationId();
 }

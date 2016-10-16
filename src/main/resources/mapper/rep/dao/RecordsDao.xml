@@ -123,6 +123,10 @@
         from records
         where zhuyuan_no=#{zhuyuanNO,jdbcType=VARCHAR}
     </select>
+    <select id="getMaxOperationId" resultType="java.lang.Integer">
+        select max(operation_id)
+        from records
+    </select>
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

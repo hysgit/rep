@@ -65,4 +65,9 @@ public class RecordsServiceImpl implements RecordsService {
     public List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO) {
         return recordsDao.getOperationIdByZhuyuanNo(zhuyuanNO);
     }
+
+    @Override
+    public Integer getMaxOperationId() {
+        return recordsDao.getMaxOperationId();
+    }
 }

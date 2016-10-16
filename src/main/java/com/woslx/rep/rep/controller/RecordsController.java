@@ -176,7 +176,8 @@ public class RecordsController extends BaseController {
                 records.setGentaiName(paramRecordsOut.getGentaiName());
                 records.setPatientName(paramRecordsOut.getPatientName());
                 records.setZhuyuanNo(paramRecordsOut.getZhuyuanNo());
-
+                Integer operationId = recordsService.getMaxOperationId();
+                records.setOperationId(operationId + 1);
                 Integer price = out.getPrice();
                 if (price != null) {
                     records.setPrice(price);

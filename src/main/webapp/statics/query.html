@@ -272,7 +272,14 @@
                         var recordslistlen = recordslist.length;
                         //console.log(row);
                         for (var lencnt = 0; lencnt < recordslistlen; lencnt++) {
-                            tabledisplay = tabledisplay + '<tr>';
+                            if(cnt%2 ==0) {
+                                tabledisplay = tabledisplay + '<tr style="background-color:ivory">';
+                            }
+                            else
+                            {
+                                tabledisplay = tabledisplay + '<tr style="background-color:#f9f2f4">';
+                            }
+
                             var record = recordslist[lencnt];
                             var pricePutIn = record.pricePutIn;
                             var allPricePutIn = record.allPricePutIn;

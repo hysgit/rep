@@ -24,7 +24,7 @@
     <li role="presentation"><a href="ruku.html">新增入库</a></li>
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
-    <li role="presentation"><a href="additem.html">添加商品</a>
+    <li role="presentation"><a href="additem.html">添加产品</a>
     <li role="presentation"><a href="query.html">手术查询</a>
     <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
 </ul>
@@ -32,10 +32,10 @@
 <table id="tableindex" class="table table-striped table-bordered table-hover">
     <thead>
     <tr>
-        <th><span>商品类型</span></th>
-        <th><span>商品名称</span></th>
-        <th><span>商品编码</span></th>
-        <th><span>商品规格</span></th>
+        <th><span>产品类型</span></th>
+        <th><span>产品名称</span></th>
+        <th><span>产品编号</span></th>
+        <th><span>产品规格</span></th>
         <th><span>总入库</span></th>
         <th><span>总出库</span></th>
         <th><span>当前数量</span></th>
@@ -74,11 +74,11 @@
 
                     var arr = data.data;
                     if (arr == undefined) {
-                        alert("无商品");
+                        alert("无产品");
                         return;
                     }
                     else if (arr.length == 0) {
-                        alert("无商品");
+                        alert("无产品");
                         return;
                     }
 
@@ -98,8 +98,8 @@
                         $('#table_body').append('<tr id="state' + i + '">' +
                                 '<td>' + item.typeName + '</td>' +
                                 '<td>' + item.name + '</td>' +
-                                '<td>' + item.specifications + '</td>' +
                                 '<td>' + '<a data-click=datalink target="_blank" href="/statics/detail.html?_t='+new Date().getTime()+'&sn='+sn+'">'+sn+'</a></td>' +
+                                '<td>' + item.specifications + '</td>' +
                                 '<td>' + item.quantityAll + '</td>' +
                                 '<td>' + item.quantityUse + '</td>' +
                                 '<td>' + item.quantityCurrent + '</td></tr>');

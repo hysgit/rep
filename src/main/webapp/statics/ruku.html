@@ -25,7 +25,7 @@
     <li role="presentation" class="active"><a href="#">新增入库</a></li>
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
-    <li role="presentation"><a href="additem.html">添加商品</a>
+    <li role="presentation"><a href="additem.html">添加产品</a>
     <li role="presentation"><a href="query.html">手术查询</a>
     <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
 </ul>
@@ -58,11 +58,11 @@
 <table id="tablein" class="table .table-striped">
     <thead>
     <tr>
-        <th><span>商品类型</span></th>
-        <th><span>商品名称</span></th>
-        <th><span>商品型号</span></th>
-        <th><span>商品数量</span></th>
-        <th><span>商品来源</span></th>
+        <th><span>产品类型</span></th>
+        <th><span>产品名称</span></th>
+        <th><span>产品型号</span></th>
+        <th><span>产品数量</span></th>
+        <th><span>产品来源</span></th>
     </tr>
     </thead>
     <tbody id = "table_body">
@@ -120,12 +120,12 @@
 
                         var arr = data.data;
                         if (arr == undefined) {
-                            alert("该类型无商品名");
+                            alert("该类型无产品名");
 
                             return;
                         }
                         else if (arr.length == 0) {
-                            alert("该类型无商品名");
+                            alert("该类型无产品名");
 
                             return;
                         }
@@ -178,12 +178,12 @@
                         $('#itemId' + ix).empty();  //清除子节点
                         var arr = data.data;
                         if (arr == undefined) {
-                            alert("该商品名称无商品");
+                            alert("该产品名称无产品");
 
                             return;
                         }
                         else if (arr.length == 0) {
-                            alert("该商品名称无商品");
+                            alert("该产品名称无产品");
 
                             return;
                         }

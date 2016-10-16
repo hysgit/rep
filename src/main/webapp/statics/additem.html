@@ -5,7 +5,7 @@
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
     <META HTTP-EQUIV="Expires" CONTENT="0">
-    <title>添加商品</title>
+    <title>添加产品</title>
     <link href="css/bootstrap.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/preset.css">
     <link/>
@@ -22,7 +22,7 @@
     <li role="presentation"><a href="ruku.html">新增入库</a></li>
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation"><a href="additemname.html">添加名称</a></li>
-    <li role="presentation" class="active"><a href="#">添加商品</a>
+    <li role="presentation" class="active"><a href="#">添加产品</a>
     <li role="presentation"><a href="query.html">手术查询</a>
     <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
 </ul>
@@ -30,7 +30,7 @@
 <p>
 </p>
 <div class="form-group form-inline">
-    <label for="itemTypeId">商品类型:</label>
+    <label for="itemTypeId">产品类型:</label>
     <select id="itemTypeId" class="form-control" name="itemTypeId">
         <option disabled selected value="0">请选择</option>
         <option value="1">脊柱</option>
@@ -40,29 +40,29 @@
 
 
 <div class="form-group  form-inline">
-    <label for="itemNameId">商品名称: </label>
+    <label for="itemNameId">产品名称: </label>
     <select id="itemNameId" class="form-control">
 
     </select>
 </div>
 
 <div class="form-group  form-inline">
-    <label for="sn">商品编号: </label>
+    <label for="sn">产品编号: </label>
     <input type="text" class="form-control" id="sn" placeholder="必填">
 </div>
 
 <div class="form-group  form-inline">
-    <label for="spec">商品规格: </label>
+    <label for="spec">产品规格: </label>
     <input type="text" class="form-control" id="spec" placeholder="必填">
 </div>
 
 <div class="form-group  form-inline">
-    <label for="factoryName">厂商名称: </label>
+    <label for="factoryName">产品品牌: </label>
     <input type="text" class="form-control" id="factoryName" placeholder="选填">
 </div>
 
 <div class="form-group  form-inline">
-    <label for="price">商品单价: </label>
+    <label for="price">产品单价: </label>
     <input type="text" class="form-control" id="price" placeholder="必填，单位：元">
 </div>
 
@@ -79,7 +79,7 @@
             as[ay].href = href +"?_t="+new Date().getTime();
         }
 
-        //选择商品类型按钮
+        //选择产品类型按钮
         $("#itemTypeId").change(function (event) {
             var itemTypeId = $("#itemTypeId").val();
             var obj = {
@@ -100,12 +100,12 @@
                     if(0 ==data.code) {
                         var arr = data.data;
                         if (arr == undefined) {
-                            alert("无商品名");
+                            alert("无产品名");
 
                             return;
                         }
                         else if (arr.length == 0) {
-                            alert("无商品名");
+                            alert("无产品名");
 
                             return;
                         }

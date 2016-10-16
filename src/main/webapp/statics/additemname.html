@@ -5,7 +5,7 @@
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
     <META HTTP-EQUIV="Expires" CONTENT="0">
-    <title>添加商品名称</title>
+    <title>添加产品名称</title>
     <link href="css/bootstrap.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/preset.css">
     <link/>
@@ -22,14 +22,14 @@
     <li role="presentation"><a href="ruku.html">新增入库</a></li>
     <li role="presentation"><a href="out.html">新增出库</a></li>
     <li role="presentation" class="active"><a href="#">添加名称</a></li>
-    <li role="presentation"><a href="additem.html">添加商品</a>
+    <li role="presentation"><a href="additem.html">添加产品</a>
     <li role="presentation"><a href="query.html">手术查询</a>
     <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
 </ul>
 <p></p>
 <form  role="form" action="javascript:void(0);">
     <div class="form-group form-inline">
-        <label for="itemTypeId">请选择商品类型:</label>
+        <label for="itemTypeId">请选择产品类型:</label>
         <select id="itemTypeId" class="form-control" name="itemTypeId">
             <option value="1">脊柱</option>
             <option value="2">创伤</option>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="form-group  form-inline">
-        <label for="itemName">请输入商品名称: </label>
+        <label for="itemName">请输入产品名称: </label>
         <input type="text" class="form-control" id="itemName" name="itemName">
     </div>
 
@@ -60,7 +60,7 @@
             var itemName = $("#itemName").val().trim();
             if(itemName==null || itemName == "")
             {
-                alert("商品名称不能为空");
+                alert("产品名称不能为空");
                 return;
             }
             $("#btnSave").attr({"disabled":"disabled"});

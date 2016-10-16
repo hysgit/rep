@@ -188,11 +188,8 @@
                 params.gentaiList = arrgentais;
             }
 
-
-//            console.log(docnames);
-//            console.log(tentan);
             console.log(params);
-            return;
+            //return;
         }
 
         console.log(JSON.stringify(params));
@@ -212,6 +209,8 @@
                 //$("#btnSave").removeAttr("disabled");
                 console.log(data);
                 if (data.code == 0) {
+
+
 
                 } else if (1000 == data.code) {
                     alert(data.message);

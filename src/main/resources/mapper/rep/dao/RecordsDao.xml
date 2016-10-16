@@ -66,25 +66,37 @@
         from records
         where
         <if test="docNameList!=null">
-            docter_name in
-            <foreach collection="list" item="docName" index="index"
+            ( docter_name in
+            <foreach collection="docNameList" item="docName" index="index"
                      open="(" close=")" separator=",">
                 #{docName}
             </foreach>
-            and
+            <if test="gentaiList==null">
+                )
+            </if>
+            <if test="gentaiList!=null">
+                or
+            </if>
         </if>
 
         <if test="gentaiList!=null">
+            <if test="docNameList==null">
+                (
+            </if>
             gentai_name in
-            <foreach collection="list" item="gentai" index="index"
+            <foreach collection="gentaiList" item="gentai" index="index"
                      open="(" close=")" separator=",">
                 #{gentai}
             </foreach>
-            and
+            )
+
         </if>
         <![CDATA[ (unix_timestamp(`time`) >= unix_timestamp(#{start,jdbcType=TIMESTAMP})) and
          (unix_timestamp(`time`) < unix_timestamp(#{end,jdbcType=TIMESTAMP}))]]>
+        and action_detail=101
+        group by zhuyuan_no
     </select>
+
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from records

@@ -49,6 +49,20 @@
     where serial_number=#{serialNumber,jdbcType=VARCHAR}
     order by type_id
   </select>
+  <select id="getByTypeIdAndNameIdAndSpec" resultMap="BaseResultMap">
+  select <include refid="Base_Column_List"/>
+    from item
+    <if test="typeId!=null">
+      where
+      type_id = #{typeId,jdbcType=INTEGER}
+      <if test="nameId!=null">
+        and name_id=#{nameId,jdbcType=INTEGER}
+        <if test="spec!=null">
+          and specifications=#{spec,jdbcType=VARCHAR}
+        </if>
+      </if>
+    </if>
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item

@@ -159,7 +159,7 @@ public class RecordsController extends BaseController {
         }
 
         List<Out> list = paramRecordsOut.getList();
-
+        Integer operationId = recordsService.getMaxOperationId();
         for (Out out : list) {
             Records records = new Records();
             records.setActionType(1);   // 出库
@@ -176,7 +176,7 @@ public class RecordsController extends BaseController {
                 records.setGentaiName(paramRecordsOut.getGentaiName());
                 records.setPatientName(paramRecordsOut.getPatientName());
                 records.setZhuyuanNo(paramRecordsOut.getZhuyuanNo());
-                Integer operationId = recordsService.getMaxOperationId();
+
                 records.setOperationId(operationId + 1);
                 Integer price = out.getPrice();
                 if (price != null) {

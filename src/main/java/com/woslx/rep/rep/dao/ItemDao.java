@@ -1,6 +1,7 @@
 package com.woslx.rep.rep.dao;
 
 import com.woslx.rep.rep.entity.Item;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,8 @@ public interface ItemDao {
     List<Item> getAll();
 
     Item getBySerialNumber(String serialNumber);
+
+    List<Item> getByTypeIdAndNameIdAndSpec(@Param("typeId") Integer typeId,
+                                           @Param("nameId") Integer nameId,
+                                           @Param("spec") String spec);
 }

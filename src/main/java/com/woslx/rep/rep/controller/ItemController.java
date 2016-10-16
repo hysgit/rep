@@ -207,12 +207,32 @@ public class ItemController {
             consumes = "application/json",
             produces = "application/json;charset=utf-8")
     @ResponseBody
-    public String getAll()
+    public String getAll(@RequestBody ParamItem paramItem)
     {
         ApiResult<List<ItemOut>> apiResult = new ApiResult<>(0, Constants.SUCCESS);
-        List<Item> itemList = itemService.getAll();
+//        List<Item> itemList = itemService.getAll();
 
+        Integer typeId = paramItem.getTypeId();
+        Integer nameId = paramItem.getNameId();
+        String spec = paramItem.getSpecifications();
 
+        if(typeId ==null || typeId ==0)
+        {
+            typeId=null;
+            nameId = null;
+            spec = null;
+        }
+        if(nameId == null || nameId == 0)
+        {
+            nameId = null;
+            spec = null;
+        }
+        if("".equals(spec))
+        {
+            spec = null;
+        }
+
+        List<Item> itemList = itemService.getByTypeIdAndNameIdAndSpec(typeId, nameId, spec);
         if(itemList == null)
         {
             throw new ApiException(1, "未找到Item");

@@ -22,4 +22,6 @@ public interface ItemService {
     List<Item> getAll();
 
     Item getBySerialNumber(String serialNumber);
+
+    List<Item> getByTypeIdAndNameIdAndSpec(Integer typeId, Integer nameId, String spec);
 }

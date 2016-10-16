@@ -51,4 +51,9 @@ public class ItemServiceImpl implements ItemService {
     public Item getBySerialNumber(String serialNumber) {
         return itemDao.getBySerialNumber(serialNumber);
     }
+
+    @Override
+    public List<Item> getByTypeIdAndNameIdAndSpec(Integer typeId, Integer nameId, String spec) {
+        return itemDao.getByTypeIdAndNameIdAndSpec(typeId, nameId, spec);
+    }
 }

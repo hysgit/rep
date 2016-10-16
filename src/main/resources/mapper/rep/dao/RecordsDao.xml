@@ -19,6 +19,7 @@
         <result column="all_price_put_in" property="allPricePutIn" jdbcType="INTEGER"/>
         <result column="time" property="time" jdbcType="TIMESTAMP"/>
         <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+        <result column="operation_id" property="operationId" jdbcType="INTEGER"/>
         <result column="docter_name" property="docterName" jdbcType="VARCHAR"/>
         <result column="gentai_name" property="gentaiName" jdbcType="VARCHAR"/>
         <result column="patient_name" property="patientName" jdbcType="VARCHAR"/>
@@ -31,7 +32,7 @@
     <sql id="Base_Column_List">
     id, item_id, item_name_id, item_type_id, action_type, action_detail, transactional_number, 
     src_or_dst, quantity_before, quantity, quantity_after, price, price_put_in, all_price, 
-    all_price_put_in, time, img_url, docter_name, gentai_name, patient_name, zhuyuan_no, 
+    all_price_put_in, time, img_url, operation_id, docter_name, gentai_name, patient_name, zhuyuan_no,
     state, action_desc, create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -55,14 +56,16 @@
         where item_id=#{itemId,jdbcType=INTEGER}
         order by create_time desc
     </select>
-    <select id="getRecordsByZhuyuanNo" resultMap="BaseResultMap">
+    <select id="getRecordsByOperationId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from records
-        where zhuyuan_no=#{zhuyuanNO,jdbcType=VARCHAR}
+        where operation_id=#{operationId,jdbcType=INTEGER}
     </select>
-    <select id="queryOperation" resultType="java.lang.String">
-        select zhuyuan_no
+    <select id="queryOperation" resultType="java.lang.Integer">
+        select distinct a.operation_id
+        from
+        (select *
         from records
         where
         <if test="docNameList!=null">
@@ -72,7 +75,7 @@
                 #{docName}
             </foreach>
             <if test="gentaiList==null">
-                )
+                ) and
             </if>
             <if test="gentaiList!=null">
                 or
@@ -88,13 +91,20 @@
                      open="(" close=")" separator=",">
                 #{gentai}
             </foreach>
-            )
+            ) and
 
         </if>
         <![CDATA[ (unix_timestamp(`time`) >= unix_timestamp(#{start,jdbcType=TIMESTAMP})) and
          (unix_timestamp(`time`) < unix_timestamp(#{end,jdbcType=TIMESTAMP}))]]>
         and action_detail=101
-        group by zhuyuan_no
+        and operation_id > 0
+        order by `time` desc
+        ) as a
+    </select>
+    <select id="getOperationIdByZhuyuanNo" resultType="java.lang.Integer">
+        select operation_id
+        from records
+        where zhuyuan_no=#{zhuyuanNO,jdbcType=VARCHAR}
     </select>
 
 
@@ -108,7 +118,7 @@
       transactional_number, src_or_dst, quantity_before, 
       quantity, quantity_after, price, 
       price_put_in, all_price, all_price_put_in, 
-      time, img_url, docter_name, 
+      time, img_url, operation_id,docter_name,
       gentai_name, patient_name, zhuyuan_no, 
       state, action_desc, create_time, 
       update_time)
@@ -117,7 +127,7 @@
       #{transactionalNumber,jdbcType=VARCHAR}, #{srcOrDst,jdbcType=VARCHAR}, #{quantityBefore,jdbcType=INTEGER}, 
       #{quantity,jdbcType=INTEGER}, #{quantityAfter,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, 
       #{pricePutIn,jdbcType=INTEGER}, #{allPrice,jdbcType=INTEGER}, #{allPricePutIn,jdbcType=INTEGER}, 
-      #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR}, #{docterName,jdbcType=VARCHAR}, 
+      #{time,jdbcType=TIMESTAMP}, #{imgUrl,jdbcType=VARCHAR},#{operationId,jdbcType=INTEGER}, #{docterName,jdbcType=VARCHAR},
       #{gentaiName,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, #{zhuyuanNo,jdbcType=VARCHAR}, 
       #{state,jdbcType=INTEGER}, #{actionDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -175,6 +185,9 @@
             </if>
             <if test="imgUrl != null">
                 img_url,
+            </if>
+            <if test="operationId != null">
+                operation_id,
             </if>
             <if test="docterName != null">
                 docter_name,
@@ -253,6 +266,9 @@
             <if test="imgUrl != null">
                 #{imgUrl,jdbcType=VARCHAR},
             </if>
+            <if test="operationId != null">
+                #{operationId,jdbcType=INTEGER},
+            </if>
             <if test="docterName != null">
                 #{docterName,jdbcType=VARCHAR},
             </if>
@@ -330,6 +346,9 @@
             <if test="imgUrl != null">
                 img_url = #{imgUrl,jdbcType=VARCHAR},
             </if>
+            <if test="operationId != null">
+                operation_id = #{operationId,jdbcType=VARCHAR},
+            </if>
             <if test="docterName != null">
                 docter_name = #{docterName,jdbcType=VARCHAR},
             </if>
@@ -375,6 +394,7 @@
       all_price_put_in = #{allPricePutIn,jdbcType=INTEGER},
       time = #{time,jdbcType=TIMESTAMP},
       img_url = #{imgUrl,jdbcType=VARCHAR},
+      operation_id = #{operationId,jdbcType=VARCHAR},
       docter_name = #{docterName,jdbcType=VARCHAR},
       gentai_name = #{gentaiName,jdbcType=VARCHAR},
       patient_name = #{patientName,jdbcType=VARCHAR},

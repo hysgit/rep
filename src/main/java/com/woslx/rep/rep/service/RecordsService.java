@@ -23,7 +23,9 @@ public interface RecordsService {
 
     List<Records> getRecordsByItemId(Integer id);
 
-    List<Records> getRecordsByZhuyuanNo(String zhuyuanNO);
+    List<Records> getRecordsByOperationId(Integer operationId);
 
-    List<String> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end);
+    List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end);
+
+    List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
 }

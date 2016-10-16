@@ -26,10 +26,12 @@ public interface RecordsDao {
 
     List<Records> getRecordsByItemId(Integer itemId);
 
-    List<Records> getRecordsByZhuyuanNo(String zhuyuanNO);
+    List<Records> getRecordsByOperationId(Integer operationId);
 
-    List<String> queryOperation(@Param("docNameList") List<String> docNameList,
+    List<Integer> queryOperation(@Param("docNameList") List<String> docNameList,
                                 @Param("gentaiList")List<String> gentaiList,
                                 @Param("start")Date start,
                                 @Param("end") Date end);
+
+    List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
 }

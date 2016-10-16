@@ -3,7 +3,6 @@ package com.woslx.rep.rep.service.impl;
 import com.woslx.rep.rep.dao.RecordsDao;
 import com.woslx.rep.rep.entity.Records;
 import com.woslx.rep.rep.entity.RecordsQueryCondition;
-import com.woslx.rep.rep.entity.param.ParamRecordsQueryCondition;
 import com.woslx.rep.rep.service.RecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,12 +52,17 @@ public class RecordsServiceImpl implements RecordsService {
     }
 
     @Override
-    public List<Records> getRecordsByZhuyuanNo(String zhuyuanNO) {
-        return recordsDao.getRecordsByZhuyuanNo(zhuyuanNO);
+    public List<Records> getRecordsByOperationId(Integer operationId) {
+        return recordsDao.getRecordsByOperationId(operationId);
     }
 
     @Override
-    public List<String> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end) {
+    public List<Integer> queryOperation(List<String> docNameList, List<String> gentaiList, Date start, Date end) {
         return recordsDao.queryOperation(docNameList, gentaiList, start, end);
+    }
+
+    @Override
+    public List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO) {
+        return recordsDao.getOperationIdByZhuyuanNo(zhuyuanNO);
     }
 }

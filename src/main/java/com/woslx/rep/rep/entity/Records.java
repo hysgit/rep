@@ -37,6 +37,8 @@ public class Records {
 
     private String imgUrl;
 
+    private Integer operationId;
+
     private String docterName;
 
     private String gentaiName;
@@ -52,6 +54,14 @@ public class Records {
     private Date createTime;
 
     private Date updateTime;
+
+    public Integer getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(Integer operationId) {
+        this.operationId = operationId;
+    }
 
     public Integer getId() {
         return id;

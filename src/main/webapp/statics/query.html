@@ -109,14 +109,22 @@
     <input id="btnQuery" type="button" class="btn btn-default " value="查询"/>
 </div>
 
-<table id="tablein" class="table .table-striped">
+<table id="tableres" class="table table-bordered">
     <thead>
     <tr>
-        <th><span>商品类型</span></th>
-        <th><span>商品名称</span></th>
-        <th><span>商品型号</span></th>
-        <th><span>商品数量</span></th>
-        <th><span>商品来源</span></th>
+        <th><span>日期</span></th>
+        <th><span>医生</span></th>
+        <th><span>跟台</span></th>
+        <th><span>病人</span></th>
+        <th><span>住院号</span></th>
+        <th><span>类型</span></th>
+        <th><span>名称</span></th>
+        <th><span>编号</span></th>
+        <th><span>规格</span></th>
+        <th><span>数量</span></th>
+        <th><span>单价</span></th>
+        <th><span>总价</span></th>
+        <th><span>总额</span></th>
     </tr>
     </thead>
     <tbody id="table_body">
@@ -140,25 +148,23 @@
         $("#mutil").show();
     }
 
-    function doQuery(){
+    function doQuery() {
         var zhuyuanNo = $("#zhuanyuan_no").val();
 
-        if(queryType == 2) {
+        if (queryType == 2) {
             if (zhuyuanNo == "") {
                 alert("住院号不能为空");
                 return;
             }
         }
         var params = {
-            "queryType":queryType
+            "queryType": queryType
         };
 
-        if(queryType == 2)
-        {
+        if (queryType == 2) {
             params.zhuyuanNO = zhuyuanNo;
         }
-        else
-        {
+        else {
             var start = $("#dtp_input2").val();
             var end = $("#dtp_input3").val();
             params.start = start;
@@ -167,22 +173,18 @@
             var gentais = $("input[name='gentai']:checked");
 
             var docnameslen = docnames.length;
-            if(docnameslen>0)
-            {
+            if (docnameslen > 0) {
                 var arrdocnames = new Array();
-                for(var cnt = 0; cnt < docnameslen; cnt++)
-                {
+                for (var cnt = 0; cnt < docnameslen; cnt++) {
                     arrdocnames[cnt] = docnames[cnt].value;
                 }
                 params.docNameList = arrdocnames;
             }
 
             var gentailen = gentais.length;
-            if(gentailen>0)
-            {
+            if (gentailen > 0) {
                 var arrgentais = new Array();
-                for(var cnt = 0; cnt < gentailen; cnt++)
-                {
+                for (var cnt = 0; cnt < gentailen; cnt++) {
                     arrgentais[cnt] = gentais[cnt].value;
                 }
                 params.gentaiList = arrgentais;
@@ -208,8 +210,62 @@
             success: function (data) {
                 //$("#btnSave").removeAttr("disabled");
                 console.log(data);
+                $("#table_body").empty();
                 if (data.code == 0) {
+                    var allsum = data.data.sum;
+                    var arr = data.data.list;
 
+                    var len = arr.length;
+                    var tabledisplay = '';
+                    for (var cnt = 0; cnt < len; cnt++) {
+                        var row = arr[cnt];
+                        var recordslist = row.recordsVOList;
+                        var recordslistlen = recordslist.length;
+                        console.log(row);
+                        for (var lencnt = 0; lencnt < recordslistlen; lencnt++) {
+                            tabledisplay = tabledisplay + '<tr>';
+                            var record = recordslist[lencnt];
+                            var pricePutIn = record.pricePutIn;
+                            var allPricePutIn = record.allPricePutIn;
+
+                            //console.log(record);
+                            if (lencnt == 0) {
+                                tabledisplay = tabledisplay
+                                        + '<td rowspan="' + recordslistlen + '">' + row.date + '</td>'
+                                        + '<td rowspan="' + recordslistlen + '">' + row.docName + '</td>'
+                                        + '<td rowspan="' + recordslistlen + '">' + row.gentai + '</td>'
+                                        + '<td rowspan="' + recordslistlen + '">' + row.patientName + '</td>'
+                                        + '<td rowspan="' + recordslistlen + '">' + row.zhuyuanNo + '</td>'
+                                ;
+                            }
+                            tabledisplay = tabledisplay + '<td>' + record.itemType + '</td>'
+                                    + '<td>' + record.itemName + '</td>'
+                                    + '<td>' + record.sn + '</td>'
+                                    + '<td>' + record.itemSpec + '</td>'
+                                    + '<td>' + record.quality + '</td>';
+
+                            if (pricePutIn == 1) {
+                                tabledisplay = tabledisplay + '<td>' + record.price + '(输入)</td>';
+                            }
+                            else {
+                                tabledisplay = tabledisplay + '<td>' + record.price + '</td>';
+                            }
+
+                            if (allPricePutIn == 1) {
+                                tabledisplay = tabledisplay + '<td>' + record.allPrice + '(输入)</td>';
+                            }
+                            else {
+                                tabledisplay = tabledisplay + '<td>' + record.allPrice + '</td>';
+                            }
+                            if (lencnt == 0) {
+                                tabledisplay = tabledisplay +'<td rowspan="' + recordslistlen + '">' + row.total + '</td>'
+                            }
+                            tabledisplay = tabledisplay + '</tr>';
+                        }
+                    }
+
+                    //console.log(tabledisplay);
+                    $("#table_body").append(tabledisplay);
 
 
                 } else if (1000 == data.code) {

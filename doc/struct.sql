@@ -74,3 +74,6 @@ create table if not exists records
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   primary key (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '出入库记录表';
+
+alter table records add  operationId int default 0 comment '手术id' after img_url;
+

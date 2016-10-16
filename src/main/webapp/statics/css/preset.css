@@ -1,9 +1,13 @@
 
 body {
     margin: auto;
-    width: 80%;
+    width: 90%;
     padding-top: 10px;
     padding-bottom:10px;
     background-color: #f6fdff;
+}
+td {
+    valign: middle;
+    text-align:center;
 }
 

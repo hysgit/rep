@@ -322,8 +322,8 @@ public class RecordsController extends BaseController {
             List<String> gentaiList = queryOpertionCondition.getGentaiList();
             List<String> docNameList = queryOpertionCondition.getDocNameList();
 
-            //1. 查询到所有在合适日期内的所有住院号,同时符合医生，跟台人
-            List<String> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, start, end);
+            //1. 查询到所有在合适日期内的所有手术id,同时符合医生，跟台人
+            List<Integer> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, start, end);
 
             //2. 根据住院号查询,查询一个，保存一个
             if (zhuyuanNoList.size() == 0) {
@@ -331,17 +331,16 @@ public class RecordsController extends BaseController {
                 apiResult.setMessage("未查找到记录");
                 return apiResult.toString();
             } else {
-                for (String zhuyuanno : zhuyuanNoList) {
+                for (Integer operationId : zhuyuanNoList) {
 
-                    OpertionMsg opertionMsg = getOpertionMsgByZhuyuanNo(zhuyuanno);
+                    OpertionMsg opertionMsg = getOpertionMsgByOperationId(operationId);
                     msgList.add(opertionMsg);
                     if (opertionMsg == null) {
-                        logger.error("住院号：{}未找到任何记录", zhuyuanno);
+                        logger.error("手术ID：{}未找到任何记录", operationId);
                         apiResult.setCode(1);
-                        apiResult.setMessage("住院号："+zhuyuanno+"未找到任何记录");
+                        apiResult.setMessage("手术ID："+operationId+"未找到任何记录");
                         return apiResult.toString();
                     } else {
-
                         opertion.setSum(opertion.getSum() + opertionMsg.getTotal());
                     }
                 }
@@ -349,23 +348,34 @@ public class RecordsController extends BaseController {
         } else    //按住院号
         {
             String zhuyuanNO = queryOpertionCondition.getZhuyuanNO();
+            List<Integer> zhuyuanNoList = recordsService.getOperationIdByZhuyuanNo(zhuyuanNO);
 
-            OpertionMsg opertionMsg = getOpertionMsgByZhuyuanNo(zhuyuanNO);
-            msgList.add(opertionMsg);
-            if (opertionMsg == null) {
+            if (zhuyuanNoList.size() == 0) {
                 apiResult.setCode(1);
                 apiResult.setMessage("未查找到记录");
                 return apiResult.toString();
             } else {
-                opertion.setSum(opertionMsg.getTotal());
+                for (Integer operationId : zhuyuanNoList) {
+
+                    OpertionMsg opertionMsg = getOpertionMsgByOperationId(operationId);
+                    msgList.add(opertionMsg);
+                    if (opertionMsg == null) {
+                        logger.error("手术ID：{}未找到任何记录", operationId);
+                        apiResult.setCode(1);
+                        apiResult.setMessage("手术ID："+operationId+"未找到任何记录");
+                        return apiResult.toString();
+                    } else {
+                        opertion.setSum(opertion.getSum() + opertionMsg.getTotal());
+                    }
+                }
             }
         }
 
         return apiResult.toString();
     }
 
-    private OpertionMsg getOpertionMsgByZhuyuanNo(String zhuyuanNo) {
-        List<Records> recordsList = recordsService.getRecordsByZhuyuanNo(zhuyuanNo);
+    private OpertionMsg getOpertionMsgByOperationId(Integer operationId) {
+        List<Records> recordsList = recordsService.getRecordsByOperationId(operationId);
         OpertionMsg opertionMsg = null;
         if (recordsList.size() == 0) {
             return null;
@@ -401,6 +411,7 @@ public class RecordsController extends BaseController {
                 vo.setAllPrice(rtemp.getAllPrice());
                 vo.setAllPricePutIn(rtemp.getAllPricePutIn());
                 vo.setItemSpec(item.getSpecifications());
+                vo.setSn(item.getSerialNumber());
                 total = total + rtemp.getAllPrice();
 
                 recordsVOList.add(vo);

@@ -19,18 +19,21 @@
 <body>
 <h2>出入库管理系统</h2>
 <p></p>
-<ul class="nav nav-pills" role="tablist">
-    <li role="presentation"><a href="index.html">查询库存</a></li>
-    <li role="presentation"><a href="detail.html">出入记录</a></li>
-    <li role="presentation"><a href="ruku.html">新增入库</a></li>
-    <li role="presentation"><a href="out.html">新增出库</a></li>
-    <li role="presentation"><a href="additemname.html">添加名称</a></li>
-    <li role="presentation"><a href="additem.html">添加产品</a>
-    <li role="presentation" class="active"><a href="query.html">手术查询</a>
-    <li>
-        <button id="logout" class="btn btn-warning" type="button">退出</button>
-    </li>
-</ul>
+<div class="form-group form-inline">
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation"><a href="index.html">查询库存</a></li>
+        <li role="presentation"><a href="detail.html">出入记录</a></li>
+        <li role="presentation"><a href="ruku.html">新增入库</a></li>
+        <li role="presentation"><a href="out.html">新增出库</a></li>
+        <li role="presentation"><a href="additemname.html">添加名称</a></li>
+        <li role="presentation"><a href="additem.html">添加产品</a>
+        <li role="presentation" class="active"><a href="query.html">手术查询</a>
+        <!--<li>-->
+            <!--<button id="logout" class="btn btn-warning" type="button">退出</button>-->
+        <!--</li>-->
+    </ul>
+    <button id="logout" style="float:right" class="btn btn-warning" type="button">退出</button>
+</div>
 <p></p>
 
 <div class="form-group form-inline">
@@ -235,33 +238,28 @@
                 if (data.code == 0) {
                     var allsum = data.data.sum;
                     var arr = data.data.list;
-                    var wan = Math.floor(allsum/10000);
-                    var weiba = allsum%10000;
+                    var wan = Math.floor(allsum / 10000);
+                    var weiba = allsum % 10000;
                     var moneyall = "";
 
 
-                    if(wan > 0)
-                    {
-                        if(weiba < 1){
+                    if (wan > 0) {
+                        if (weiba < 1) {
                             moneyall = "0000";
                         }
-                        else if(weiba < 100)
-                        {
-                            moneyall = "00"+weiba;
+                        else if (weiba < 100) {
+                            moneyall = "00" + weiba;
                         }
-                        else if(weiba < 1000)
-                        {
-                            moneyall = "0"+weiba;
+                        else if (weiba < 1000) {
+                            moneyall = "0" + weiba;
                         }
-                        else
-                        {
-                            moneyall = ""+weiba;
+                        else {
+                            moneyall = "" + weiba;
                         }
-                        moneyall = wan + "," +moneyall;
+                        moneyall = wan + "," + moneyall;
                     }
-                    else
-                    {
-                        moneyall = ""+weiba;
+                    else {
+                        moneyall = "" + weiba;
                     }
                     $("#all").text(moneyall);
                     var len = arr.length;
@@ -272,11 +270,10 @@
                         var recordslistlen = recordslist.length;
                         //console.log(row);
                         for (var lencnt = 0; lencnt < recordslistlen; lencnt++) {
-                            if(cnt%2 ==0) {
+                            if (cnt % 2 == 0) {
                                 tabledisplay = tabledisplay + '<tr style="background-color:ivory">';
                             }
-                            else
-                            {
+                            else {
                                 tabledisplay = tabledisplay + '<tr style="background-color:#f9f2f4">';
                             }
 
@@ -287,7 +284,7 @@
                             //console.log(record);
                             if (lencnt == 0) {
                                 tabledisplay = tabledisplay
-                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + (1+cnt) + '</td>'
+                                        + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + (1 + cnt) + '</td>'
                                         + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.date + '</td>'
                                         + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.docName + '</td>'
                                         + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.gentai + '</td>'
@@ -315,7 +312,7 @@
                                 tabledisplay = tabledisplay + '<td>' + record.allPrice + '</td>';
                             }
                             if (lencnt == 0) {
-                                tabledisplay = tabledisplay +'<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.total + '</td>'
+                                tabledisplay = tabledisplay + '<td style="vertical-align:middle;" rowspan="' + recordslistlen + '">' + row.total + '</td>'
                             }
                             tabledisplay = tabledisplay + '</tr>';
                         }

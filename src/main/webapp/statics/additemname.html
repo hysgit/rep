@@ -16,6 +16,7 @@
 <body>
 <h2>出入库管理系统</h2>
 <p></p>
+<div class="form-group form-inline">
 <ul class="nav nav-pills" role="tablist">
     <li role="presentation"><a href="index.html">查询库存</a></li>
     <li role="presentation"><a href="detail.html">出入记录</a></li>
@@ -24,9 +25,12 @@
     <li role="presentation" class="active"><a href="#">添加名称</a></li>
     <li role="presentation"><a href="additem.html">添加产品</a>
     <li role="presentation"><a href="query.html">手术查询</a>
-    <li><button id="logout" class="btn btn-warning" type="button">退出</button></li>
+    <!--<li><button id="logout" class="btn btn-warning" type="button">退出</button></li>-->
 </ul>
+    <button id="logout" style="float:right" class="btn btn-warning" type="button">退出</button>
+    </div>
 <p></p>
+
 <form  role="form" action="javascript:void(0);">
     <div class="form-group form-inline">
         <label for="itemTypeId">请选择产品类型:</label>

@@ -28,7 +28,7 @@ public interface RecordsDao {
 
     List<Records> getRecordsByOperationId(Integer operationId);
 
-    List<Integer> queryOperation(@Param("docNameList") List<String> docNameList,
+    List<Records> queryOperation(@Param("docNameList") List<String> docNameList,
                                 @Param("gentaiList")List<String> gentaiList,
                                 @Param("typeList")List<Integer> typeList,
                                 @Param("start")Date start,

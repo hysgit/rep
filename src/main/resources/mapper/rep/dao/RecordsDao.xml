@@ -62,8 +62,8 @@
         from records
         where operation_id=#{operationId,jdbcType=INTEGER}
     </select>
-    <select id="queryOperation" resultType="java.lang.Integer">
-        select distinct a.operation_id
+    <select id="queryOperation" resultMap="BaseResultMap">
+        select distinct a.operation_id,a.time
         from
         (select *
         from records
@@ -117,6 +117,7 @@
         and operation_id > 0
         order by `time` desc
         ) as a
+        order by a.`time` desc
     </select>
     <select id="getOperationIdByZhuyuanNo" resultType="java.lang.Integer">
         select DISTINCT operation_id

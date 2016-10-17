@@ -341,7 +341,7 @@ public class RecordsController extends BaseController {
             List<Integer> typeList = queryOpertionCondition.getTypeList();
 
             //1. 查询到所有在合适日期内的所有手术id,同时符合医生，跟台人
-            List<Integer> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, typeList, start, end);
+            List<Records> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, typeList, start, end);
 
             //2. 根据住院号查询,查询一个，保存一个
             if (zhuyuanNoList.size() == 0) {
@@ -349,14 +349,14 @@ public class RecordsController extends BaseController {
                 apiResult.setMessage("未查找到记录");
                 return apiResult.toString();
             } else {
-                for (Integer operationId : zhuyuanNoList) {
+                for (Records records : zhuyuanNoList) {
 
-                    OpertionMsg opertionMsg = getOpertionMsgByOperationId(operationId);
+                    OpertionMsg opertionMsg = getOpertionMsgByOperationId(records.getOperationId());
                     msgList.add(opertionMsg);
                     if (opertionMsg == null) {
-                        logger.error("手术ID：{}未找到任何记录", operationId);
+                        logger.error("手术ID：{}未找到任何记录", records.getOperationId());
                         apiResult.setCode(1);
-                        apiResult.setMessage("手术ID："+operationId+"未找到任何记录");
+                        apiResult.setMessage("手术ID："+records.getOperationId()+"未找到任何记录");
                         return apiResult.toString();
                     } else {
                         opertion.setSum(opertion.getSum() + opertionMsg.getTotal());

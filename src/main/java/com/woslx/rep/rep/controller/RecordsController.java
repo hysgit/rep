@@ -299,11 +299,27 @@ public class RecordsController extends BaseController {
             Calendar calendar = Calendar.getInstance();
             Date end = queryOpertionCondition.getEnd();
             Date start = queryOpertionCondition.getStart();
+            if(end==null)
+            {
+                end = new Date();
+            }
+            if(start == null)
+            {
+                Calendar instance = Calendar.getInstance();
+                instance.set(Calendar.DATE,1);  //回到本月第一天
+                start = instance.getTime();
+            }
             calendar.setTime(start);
             calendar.set(Calendar.HOUR,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
             start = calendar.getTime();
             calendar.setTime(end);
             calendar.set(Calendar.HOUR,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
             calendar.add(Calendar.DATE,1);
             end = calendar.getTime();
 

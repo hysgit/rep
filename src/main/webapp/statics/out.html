@@ -21,18 +21,18 @@
 <h2>出入库管理系统</h2>
 <p></p>
 <div class="form-group form-inline">
-<ul class="nav nav-pills" role="tablist">
-    <li role="presentation"><a href="index.html">查询库存</a></li>
-    <li role="presentation"><a href="detail.html">出入记录</a></li>
-    <li role="presentation"><a href="ruku.html">新增入库</a></li>
-    <li role="presentation" class="active"><a href="#">新增出库</a></li>
-    <li role="presentation"><a href="additemname.html">添加名称</a></li>
-    <li role="presentation"><a href="additem.html">添加产品</a>
-    <li role="presentation"><a href="query.html">手术查询</a>
-    <!--<li><button id="logout" class="btn btn-warning" type="button">退出</button></li>-->
-</ul>
+    <ul class="nav nav-pills" role="tablist">
+        <li role="presentation"><a href="index.html">查询库存</a></li>
+        <li role="presentation"><a href="detail.html">出入记录</a></li>
+        <li role="presentation"><a href="ruku.html">新增入库</a></li>
+        <li role="presentation" class="active"><a href="#">新增出库</a></li>
+        <li role="presentation"><a href="additemname.html">添加名称</a></li>
+        <li role="presentation"><a href="additem.html">添加产品</a>
+        <li role="presentation"><a href="query.html">手术查询</a>
+            <!--<li><button id="logout" class="btn btn-warning" type="button">退出</button></li>-->
+    </ul>
     <button id="logout" style="float:right" class="btn btn-warning" type="button">退出</button>
-    </div>
+</div>
 <p>
 </p>
 
@@ -74,40 +74,47 @@
         <th><span>单价</span></th>
         <th><span>总价</span></th>
         <th><span>产品去向</span></th>
+        <th><span></span></th>
     </tr>
     </thead>
-    <tbody id = "table_body">
+    <tbody id="table_body">
 
 
     </tbody>
 </table>
 <p></p>
 <div class="form-group">
-<input id="btnSave" type="button" style="float:right;" class="btn btn-default " value="保存"/>
+    <input id="btnSave" type="button" style="float:right;" class="btn btn-default " value="保存"/>
 </div>
 <script>
 
     var i = 1;
-    function add_a_new_line(ix)
-    {
-        $("#table_body").append('<tr>' +
-                '<td><select id="itemTypeId'+ix+'" class="form-control">'+
-                '<option disabled selected value="0">请选择</option>'+
-                '<option value="1">脊柱</option>'+
-                '<option value="2">创伤</option>'+
-                '</select></td>'+
-                '<td><select style="width:200px;" id="itemNameId'+ix+'" class="form-control"></select> </td>'+
-                '<td><select style="width:200px;" id="itemId'+ix+'" class="form-control"></select></td>'+
-                '<td><input type="text" class="form-control" id="quality'+ix+'" placeholder="数量,必填"></td>'+
-                '<td><input type="text" class="form-control" id="price'+ix+'" placeholder="单价，选填"></td>'+
-                '<td><input type="text" class="form-control" id="priceAll'+ix+'" placeholder="总价，选填"></td>'+
-                '<td><input type="text" class="form-control" id="dst'+ix+'" placeholder="去向,选填"></td></tr>');
-        i= i+1;
+    function add_a_new_line(ix) {
+        $("#table_body").append('<tr id="itemrow' + ix + '">' +
+                '<td><select id="itemTypeId' + ix + '" class="form-control">' +
+                '<option disabled selected value="0">请选择</option>' +
+                '<option value="1">脊柱</option>' +
+                '<option value="2">创伤</option>' +
+                '</select></td>' +
+                '<td><select  id="itemNameId' + ix + '" class="form-control"></select> </td>' +
+                '<td><select  id="itemId' + ix + '" class="form-control"></select></td>' +
+                '<td><input  type="text" class="form-control" id="quality' + ix + '" placeholder="数量,必填"></td>' +
+                '<td><input  type="text" class="form-control" id="price' + ix + '" placeholder="单价，选填"></td>' +
+                '<td><input  type="text" class="form-control" id="priceAll' + ix + '" placeholder="总价，选填"></td>' +
+                '<td><input  type="text" class="form-control" id="dst' + ix + '" placeholder="去向,选填"></td>' +
+                '<td><input  type="button" class="form-control" id="btn' + ix + '" value="删除"></td></tr>'
+        );
+        i = i + 1;
 
-        $('#itemTypeId'+ix).click(function(event){
-            var itemTypeId = $('#itemTypeId'+ix).val();
-            if(itemTypeId == 0 || itemTypeId==undefined)
-            {
+        $('#btn' + ix).click(function () {
+            if($("#table_body tr").length >1 ){
+                $('#itemrow' + ix).remove();
+            }
+        });
+
+        $('#itemTypeId' + ix).click(function (event) {
+            var itemTypeId = $('#itemTypeId' + ix).val();
+            if (itemTypeId == 0 || itemTypeId == undefined) {
                 return;
             }
             var obj = {
@@ -127,7 +134,7 @@
                 },
                 success: function (data) {
 
-                    if(data.code == 0) {
+                    if (data.code == 0) {
                         $('#itemNameId' + ix).empty();  //清除子节点
                         $('#itemId' + ix).empty();  //清除子节点
 
@@ -150,12 +157,11 @@
                             $('#itemNameId' + ix).append("<option value='" + itemName.id + "'>" + itemName.name + "</option>");
                         }
                     }
-                    else if(1000 == data.code){
+                    else if (1000 == data.code) {
                         alert(data.message);
-                        window.location=data.data;
+                        window.location = data.data;
                     }
-                    else
-                    {
+                    else {
                         alert(data.message);
                     }
                 }
@@ -163,11 +169,10 @@
         });
 
 
-        $('#itemNameId'+ix).click(function(event){
-            var nameId = $('#itemNameId'+ix).val();
+        $('#itemNameId' + ix).click(function (event) {
+            var nameId = $('#itemNameId' + ix).val();
 
-            if(nameId == 0 || nameId==undefined)
-            {
+            if (nameId == 0 || nameId == undefined) {
                 return;
             }
 
@@ -188,7 +193,7 @@
                     alert('系统繁忙,请稍后再试');
                 },
                 success: function (data) {
-                    if(0 == data.code) {
+                    if (0 == data.code) {
                         $('#itemId' + ix).empty();  //清除子节点
                         var arr = data.data;
                         if (arr == undefined) {
@@ -209,12 +214,11 @@
                             $('#itemId' + ix).append("<option value='" + item.id + "'>" + item.specifications + "</option>");
                         }
                     }
-                    else if(1000 == data.code){
+                    else if (1000 == data.code) {
                         alert(data.message);
-                        window.location=data.data;
+                        window.location = data.data;
                     }
-                    else
-                    {
+                    else {
                         alert(data.message);
                     }
                 }
@@ -226,27 +230,27 @@
     $(function () {
         var as = $("ul li a");
 
-        for(var ay = 0;ay < as.length;ay++) {
+        for (var ay = 0; ay < as.length; ay++) {
             var href = as[ay].href;
-            as[ay].href = href +"?_t="+new Date().getTime();
+            as[ay].href = href + "?_t=" + new Date().getTime();
         }
 
-        function add_shoushu()
-        {
+        function add_shoushu() {
             $("#box1").append(
-                    '<label  for="docterName">医生:</label>'+
-                    '<input type="text" style="width:70px;" class="form-control" id="docterName">'+
-                    '<label  for="gentai_name">跟台人:</label>'+
-                    '<input type="text" style="width:70px;"  class="form-control" id="gentai_name">'+
-                    '<label  for="patient_name">病人:</label>'+
-                    '<input type="text" style="width:70px;"  class="form-control" id="patient_name">'+
-                    '<label  for="zhuyuan_no">住院号:</label>'+
+                    '<label  for="docterName">医生:</label>' +
+                    '<input type="text" style="width:70px;" class="form-control" id="docterName">' +
+                    '<label  for="gentai_name">跟台人:</label>' +
+                    '<input type="text" style="width:70px;"  class="form-control" id="gentai_name">' +
+                    '<label  for="patient_name">病人:</label>' +
+                    '<input type="text" style="width:70px;"  class="form-control" id="patient_name">' +
+                    '<label  for="zhuyuan_no">住院号:</label>' +
                     '<input type="text" style="width:140px;"  class="form-control" id="zhuyuan_no">'
             );
         }
+
         add_shoushu();
         add_a_new_line(i);
-        $("#add_new").click(function(event){
+        $("#add_new").click(function (event) {
             add_a_new_line(i);
         });
 
@@ -261,9 +265,9 @@
         });
 
         $('.form_date').datetimepicker({
-            language:  'zh-CN',
+            language: 'zh-CN',
             weekStart: 1,
-            todayBtn:  1,
+            todayBtn: 1,
             autoclose: 1,
             todayHighlight: 1,
             startView: 2,
@@ -271,8 +275,7 @@
             forceParse: 0
         });
 
-        function save_out_data()
-        {
+        function save_out_data() {
             var itemOutType = $("#itemOutType").val();     //出库类型
             var docterName = $("#docterName").val();     //医生姓名
             var gentai_name = $("#gentai_name").val();     //跟台人
@@ -280,27 +283,22 @@
             var zhuyuan_no = $("#zhuyuan_no").val();     //住院号
 
 
-            if(itemOutType == 101)
-            {
-                if(docterName==null || docterName == undefined || docterName == "")
-                {
+            if (itemOutType == 101) {
+                if (docterName == null || docterName == undefined || docterName == "") {
                     alert("医生姓名必填");
-                    return ;
+                    return;
                 }
-                if(gentai_name==null || gentai_name == undefined || gentai_name == "")
-                {
+                if (gentai_name == null || gentai_name == undefined || gentai_name == "") {
                     alert("跟台人必填");
-                    return ;
+                    return;
                 }
-                if(patient_name==null || patient_name == undefined || patient_name == "")
-                {
+                if (patient_name == null || patient_name == undefined || patient_name == "") {
                     alert("病人姓名必填");
-                    return ;
+                    return;
                 }
-                if(zhuyuan_no==null || zhuyuan_no == undefined || zhuyuan_no == "")
-                {
+                if (zhuyuan_no == null || zhuyuan_no == undefined || zhuyuan_no == "") {
                     alert("住院号必填");
-                    return ;
+                    return;
                 }
             }
 
@@ -310,17 +308,16 @@
 
             var len = $("#table_body tr").length;        //表格行数
             //console.log(len);
-            for(var row=1; row < len+1; row++) {
+            for (var row = 1; row < len + 1; row++) {
                 var obj = {};
                 obj.itemId = $("#itemId" + row).val().trim();
                 var typeId = $("#itemTypeId" + row).val().trim();
                 var nameId = $("#itemNameId" + row).val().trim();
-                obj.quality = Math.round(parseFloat($("#quality" + row).val().trim())*10);
+                obj.quality = Math.round(parseFloat($("#quality" + row).val().trim()) * 10);
                 obj.price = $("#price" + row).val().trim();
                 obj.priceAll = $("#priceAll" + row).val().trim();
 
-                if(obj.itemId==null || typeId == null || nameId == null || isNaN(obj.quality)  || obj.quality < 1)
-                {
+                if (obj.itemId == null || typeId == null || nameId == null || isNaN(obj.quality) || obj.quality < 1) {
                     alert("必填项必须填写！");
                     return;
                 }
@@ -334,21 +331,21 @@
                 }
 
                 //console.log(obj);
-                array[row-1] = obj;
+                array[row - 1] = obj;
 
             }
 
-            var params ={
-                "itemOutType":itemOutType,
-                "docterName":docterName,
-                "gentaiName":gentai_name,
-                "patientName":patient_name,
-                "zhuyuanNo":zhuyuan_no,
-                "date":date,
-                "list":array
+            var params = {
+                "itemOutType": itemOutType,
+                "docterName": docterName,
+                "gentaiName": gentai_name,
+                "patientName": patient_name,
+                "zhuyuanNo": zhuyuan_no,
+                "date": date,
+                "list": array
             };
             //console.log(JSON.stringify(params));
-            $("#btnSave").attr({"disabled":"disabled"});
+            $("#btnSave").attr({"disabled": "disabled"});
             $.ajax({
                 type: "POST",//请求方式，get或post
                 url: "/records/create/out",
@@ -362,27 +359,25 @@
                 },
                 success: function (data) {
                     $("#btnSave").removeAttr("disabled");
-                    if(data.code == 0)
-                    {
+                    if (data.code == 0) {
                         alert('出库成功');
 
                         $("#table_body").empty();
-                        i=1;
+                        i = 1;
                         add_a_new_line(i);
                     }
-                    else if(1000 == data.code){
+                    else if (1000 == data.code) {
                         alert(data.message);
-                        window.location=data.data;
+                        window.location = data.data;
                     }
-                    else
-                    {
+                    else {
                         alert(data.message);
                     }
                 }
             });
         }
 
-        $("#btnSave").click(function(event){
+        $("#btnSave").click(function (event) {
             save_out_data();
         });
 

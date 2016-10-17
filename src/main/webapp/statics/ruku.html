@@ -82,7 +82,7 @@
     var i = 1;
     function add_a_new_line(ix)
     {
-        $("#table_body").append('<tr>' +
+        $("#table_body").append('<tr id="itemrow' + ix + '">' +
                 '<td><select id="itemTypeId'+ix+'" class="form-control">'+
             '<option disabled selected value="0">请选择</option>'+
             '<option value="1">脊柱</option>'+
@@ -91,9 +91,18 @@
             '<td><select style="width:200px;" id="itemNameId'+ix+'" class="form-control"></select> </td>'+
             '<td><select style="width:200px;" id="itemId'+ix+'" class="form-control"></select></td>'+
             '<td><input type="text" class="form-control" id="quality'+ix+'" placeholder="数量,必填"></td>'+
-            '<td><input type="text" class="form-control" id="src'+ix+'" placeholder="请出入来源"></td></tr>');
+            '<td><input type="text" class="form-control" id="src'+ix+'" placeholder="请出入来源"></td>'+
+            '<td><input  type="button" class="form-control" id="btn' + ix + '" value="删除"></td></tr>'
+        );
 
         i= i+1;
+
+        $('#btn' + ix).click(function () {
+            if($("#table_body tr").length >1 ){
+//                console.log($("#table_body tr").length);
+                $('#itemrow' + ix).remove();
+            }
+        });
 
         $('#itemTypeId'+ix).click(function(event){
             var itemTypeId = $('#itemTypeId'+ix).val();

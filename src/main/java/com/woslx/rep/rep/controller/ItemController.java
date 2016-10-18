@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -244,6 +245,7 @@ public class ItemController {
         }
         else {
             List<ItemOut> itemOuts = createItemOut(itemList);
+            Collections.sort(itemOuts);
             apiResult.setData(itemOuts);
         }
 

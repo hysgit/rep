@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by hy on 10/12/16.
  */
-public class ItemOut {
+public class ItemOut implements Comparable<ItemOut>{
     private Integer id;
 
     private String typeName;
@@ -84,5 +84,23 @@ public class ItemOut {
 
     public void setQuantityCurrent(Double quantityCurrent) {
         this.quantityCurrent = quantityCurrent;
+    }
+
+    @Override
+    public int compareTo(ItemOut o) {
+        if(this.getTypeName().compareToIgnoreCase(o.getTypeName()) != 0)
+        {
+            return this.getTypeName().compareToIgnoreCase(o.getTypeName());
+        }
+        else {
+            if(this.getName().compareToIgnoreCase(o.getName()) != 0)
+            {
+                return this.getName().compareToIgnoreCase(o.getName());
+            }
+            else{
+                return this.getSpecifications().compareToIgnoreCase(o.getSpecifications());
+            }
+        }
+
     }
 }

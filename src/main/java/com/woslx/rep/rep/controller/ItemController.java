@@ -245,7 +245,7 @@ public class ItemController {
         }
         else {
             List<ItemOut> itemOuts = createItemOut(itemList);
-            Collections.sort(itemOuts);
+            //Collections.sort(itemOuts);
             apiResult.setData(itemOuts);
         }
 

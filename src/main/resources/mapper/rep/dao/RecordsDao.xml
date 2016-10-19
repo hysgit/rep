@@ -115,9 +115,9 @@
          (unix_timestamp(`time`) < unix_timestamp(#{end,jdbcType=TIMESTAMP}))]]>
         and action_detail=101
         and operation_id > 0
-        order by `time` desc
+        order by `time` asc
         ) as a
-        order by a.`time` desc
+        order by a.`time` asc
     </select>
     <select id="getOperationIdByZhuyuanNo" resultType="java.lang.Integer">
         select DISTINCT operation_id

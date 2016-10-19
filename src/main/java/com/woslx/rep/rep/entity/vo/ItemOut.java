@@ -88,9 +88,13 @@ public class ItemOut implements Comparable<ItemOut>{
 
     @Override
     public int compareTo(ItemOut o) {
-        if(this.getTypeName().compareToIgnoreCase(o.getTypeName()) != 0)
+        if(this.getTypeName().compareToIgnoreCase(o.getTypeName()) > 0)
         {
-            return this.getTypeName().compareToIgnoreCase(o.getTypeName());
+            return -1;
+        }
+        else if(this.getTypeName().compareToIgnoreCase(o.getTypeName()) < 0)
+        {
+            return 1;
         }
         else {
             if(this.getName().compareToIgnoreCase(o.getName()) != 0)

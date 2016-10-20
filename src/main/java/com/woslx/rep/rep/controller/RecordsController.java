@@ -65,7 +65,7 @@ public class RecordsController extends BaseController {
             produces = "application/json;charset=utf-8")
     @ResponseBody
     @Transactional
-    public String create(@RequestBody ParamRecordsRuku paramRecordsRuku) {
+    public String createIn(@RequestBody ParamRecordsRuku paramRecordsRuku) {
         ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 
         Integer itemInType = paramRecordsRuku.getItemInType();  // 入库类型
@@ -197,6 +197,53 @@ public class RecordsController extends BaseController {
                     records.setAllPricePutIn(0);   //内设定
                 }
             }
+            if(itemOutType == 1000)     //清点错位
+            {
+                String dst = out.getDst();
+                Item itemIn = itemService.getBySerialNumber(dst);//需要入库的产品
+                if (itemIn == null) {
+                    throw new ApiException(1, "指定的调换的商品不存在");
+                }
+                if (itemIn.getQuantityCurrent() == 0) {
+                    throw new ApiException(1, "指定的调换的商品数为0");
+                }
+                if(itemIn.getSpecifications().equals(item.getSerialNumber()))
+                {
+                    throw new ApiException(1, "目标和来源是同一个商品");
+                }
+
+                Records recordsIn = new Records();
+                recordsIn.setActionType(2);   // 入库
+                recordsIn.setActionDetail(1000);
+                recordsIn.setTransactionalNumber("yy2");
+                recordsIn.setTime(date);
+
+                recordsIn.setSrcOrDst(item.getSerialNumber());//清点错位的时候，入库来源，就是出库商品的编号
+                records.setSrcOrDst(itemIn.getSerialNumber());//清点错位的时候，出库去向，就是入库商品的编号
+
+                //Item itemIn = itemService.getById(ruku.getItemId());
+                recordsIn.setItemId(itemIn.getId());
+                recordsIn.setItemTypeId(itemIn.getTypeId());
+                recordsIn.setItemNameId(itemIn.getNameId());
+
+                int quality = out.getQuality();     //清点错位的时候，这边出的，就塞这边入的个数
+                recordsIn.setQuantityBefore(itemIn.getQuantityCurrent());
+                recordsIn.setQuantity(quality);
+
+                itemIn.setQuantityAll(itemIn.getQuantityAll() + quality);
+                itemIn.setQuantityCurrent(itemIn.getQuantityAll() - itemIn.getQuantityUse());
+
+                recordsIn.setQuantityAfter(itemIn.getQuantityCurrent());
+
+                recordsIn.setState(1);
+
+                Date date2 = new Date();
+                recordsIn.setCreateTime(date2);
+                recordsIn.setUpdateTime(date2);
+
+                recordsService.insert(recordsIn); //保存记录
+                itemService.update(itemIn);
+            }
 
             records.setTime(date);
 
@@ -224,7 +271,6 @@ public class RecordsController extends BaseController {
             Date date2 = new Date();
             records.setCreateTime(date2);
             records.setUpdateTime(date2);
-
 
             recordsService.insert(records); //保存记录
             itemService.update(item);
@@ -496,11 +542,55 @@ public class RecordsController extends BaseController {
             vo.setQuality(records.getQuantity() / 10.0);
             vo.setDocName(records.getDocterName());
             vo.setGentai(records.getGentaiName());
+            vo.setPatientName(records.getPatientName());
+            vo.setSrcOrDst(records.getSrcOrDst());
+
             Integer actionType = records.getActionType();
             if (actionType == 1) {
                 vo.setInOutType("出库");
+                Integer actionDetail = records.getActionDetail();
+                if(actionDetail == 101)
+                {
+                    vo.setInOutDetail("手术");
+                }
+                else if(actionDetail == 102){
+                    vo.setInOutDetail("报废 ");
+                }
+                else if(actionDetail == 103){
+                    vo.setInOutDetail("遗失");
+                }
+                else if(actionDetail == 104){
+                    vo.setInOutDetail("出货给二级代理商");
+                }
+                else if(actionDetail == 1000){
+                    vo.setInOutDetail("清点错位");
+                }
+                else {
+                    logger.error("未知类型："+actionDetail);
+                    vo.setInOutDetail("未知类型："+actionDetail);
+                }
+
             } else {
                 vo.setInOutType("入库");
+                Integer actionDetail = records.getActionDetail();
+                if(actionDetail == 1)
+                {
+                    vo.setInOutDetail("原始库存入库");
+                }
+                else if(actionDetail == 2){
+                    vo.setInOutDetail("补货,来自平台");
+                }
+                else if(actionDetail == 3){
+                    vo.setInOutDetail("调货");
+                }
+                else if(actionDetail == 1000){
+                    vo.setInOutDetail("清点错位");
+                }
+                else {
+                    logger.error("未知类型："+actionDetail);
+                    vo.setInOutDetail("未知类型："+actionDetail);
+                }
+
             }
             vo.setTransn(records.getTransactionalNumber());
             list2.add(vo);

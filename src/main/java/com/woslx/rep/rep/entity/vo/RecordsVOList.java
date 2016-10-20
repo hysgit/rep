@@ -27,6 +27,8 @@ public class RecordsVOList {
 
     private List<RecordsVO> list;
 
+
+
     public Integer getId() {
         return id;
     }

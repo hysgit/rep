@@ -53,11 +53,14 @@
     <thead>
     <tr>
         <th><span>出入库类型</span></th>
+        <th><span>出入库详情</span></th>
         <th><span>流水单号</span></th>
         <th><span>出入库前</span></th>
         <th><span>数量</span></th>
         <th><span>出入库后</span></th>
+        <th><span>来源或去向</span></th>
         <th><span>医生姓名</span></th>
+        <th><span>病人姓名</span></th>
         <th><span>跟台人</span></th>
         <th><span>时间</span></th>
     </tr>
@@ -119,11 +122,14 @@
                             $("#table_body").append(
                                     '<tr>' +
                                     '<td>' + x.inOutType + '</td>' +
+                                    '<td>' + x.inOutDetail + '</td>' +
                                     '<td>' + ((x.transn == undefined) ? "" : x.transn) + '</td>' +
                                     '<td>' + x.before + '</td>' +
                                     '<td>' + ((x.inOutType == '出库') ? '<label style="color:red;">-</label>' : '<label style="color:blueviolet;">+</label>') + x.quality + '</td>' +
                                     '<td>' + x.after + '</td>' +
+                                    '<td>' + ((x.srcOrDst == undefined) ? "" : x.srcOrDst) + '</td>' +
                                     '<td>' + ((x.docName == undefined) ? "" : x.docName) + '</td>' +
+                                    '<td>' + ((x.patientName == undefined) ? "" : x.patientName) + '</td>' +
                                     '<td>' + ((x.gentai == undefined) ? "" : x.gentai) + '</td>' +
                                     '<td>' + ((x.date == undefined) ? "" : x.date) + '</td>' +
                                     '</tr>'

@@ -204,7 +204,7 @@
                         $('#itemId' + ix).append('<option disabled selected></option>');
                         for (var i = 0; i < datalen; i++) {
                             var item = arr[i];
-                            $('#itemId' + ix).append("<option value='" + item.id + "'>" + item.specifications + "</option>");
+                            $('#itemId' + ix).append('<option value="' + item.id + '">' +  item.serialNumber+' ('+item.specifications+')'+ '</option>');
                         }
                     }
                     else if(1000 == data.code){
@@ -228,7 +228,9 @@
         //只有补货有单号，其他情况填写垃圾单号
         if(itemInType != 2)
         {
+
             transactionalNumber = "xx11111111111111111";
+
         }
 
         if(transactionalNumber==null || transactionalNumber ==undefined || transactionalNumber=="")

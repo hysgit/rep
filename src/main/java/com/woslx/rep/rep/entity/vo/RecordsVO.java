@@ -43,6 +43,16 @@ public class RecordsVO {
 
     private String patientName;
 
+    private String srcOrDst;
+
+    public String getSrcOrDst() {
+        return srcOrDst;
+    }
+
+    public void setSrcOrDst(String srcOrDst) {
+        this.srcOrDst = srcOrDst;
+    }
+
     public String getPatientName() {
         return patientName;
     }

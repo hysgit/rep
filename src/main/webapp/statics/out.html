@@ -44,6 +44,7 @@
         <option value="103">遗失</option>
         <option value="104">出货给二级代理商</option>
         <option value="105">退货给平台</option>
+        <option value="1000">清点错位</option>
     </select>
 
     <div id="box1" class="form-group form-inline">
@@ -211,7 +212,7 @@
                         $('#itemId' + ix).append('<option disabled selected></option>');
                         for (var i = 0; i < datalen; i++) {
                             var item = arr[i];
-                            $('#itemId' + ix).append("<option value='" + item.id + "'>" + item.specifications + "</option>");
+                            $('#itemId' + ix).append('<option value="' + item.id + '">' +  item.serialNumber+' ('+item.specifications+')'+ '</option>');
                         }
                     }
                     else if (1000 == data.code) {
@@ -322,8 +323,8 @@
                     return;
                 }
 
-                var dst = $("#dst" + row).val();
-                if (dst == null || dst == undefined || "" == dst.trim()) {
+                var dst = $("#dst" + row).val().trim();
+                if (dst == null || dst == undefined || "" == dst) {
 
                 }
                 else {

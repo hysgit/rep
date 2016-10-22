@@ -1,5 +1,6 @@
 package com.woslx.rep.rep.controller;
 
+import com.sun.rowset.internal.Row;
 import com.woslx.rep.common.ApiException;
 import com.woslx.rep.common.ApiResult;
 import com.woslx.rep.common.Constants;
@@ -11,15 +12,32 @@ import com.woslx.rep.rep.entity.vo.ItemOut;
 import com.woslx.rep.rep.service.ItemNameService;
 import com.woslx.rep.rep.service.ItemService;
 import com.woslx.rep.rep.service.ItemTypeService;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -217,7 +235,7 @@ public class ItemController {
             consumes = "application/json",
             produces = "application/json;charset=utf-8")
     @ResponseBody
-    public String getAll(@RequestBody ParamItem paramItem)
+    public String getAll(@RequestBody ParamItem paramItem, HttpSession session)
     {
         ApiResult<List<ItemOut>> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 //        List<Item> itemList = itemService.getAll();
@@ -243,6 +261,7 @@ public class ItemController {
         }
 
         List<Item> itemList = itemService.getByTypeIdAndNameIdAndSpec(typeId, nameId, spec);
+
         if(itemList == null)
         {
             throw new ApiException(1, "未找到Item");
@@ -254,6 +273,7 @@ public class ItemController {
         }
         else {
             List<ItemOut> itemOuts = createItemOut(itemList);
+            session.setAttribute("result",itemOuts);
             Collections.sort(itemOuts);
             apiResult.setData(itemOuts);
         }
@@ -285,5 +305,121 @@ public class ItemController {
         }
 
         return itemOuts;
+    }
+
+    @RequestMapping("download")
+    public ResponseEntity<byte[]> download(HttpSession session) throws IOException {
+
+        List<ItemOut> result = (List<ItemOut>)session.getAttribute("result");
+        if(result == null)
+        {
+            throw new RuntimeException("未找到文件");
+        }
+
+        URL resource = this.getClass().getClassLoader().getResource(".");
+        String path =null;
+        if (resource != null) {
+            path = resource.getPath();
+        }
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日hh时mm分ss秒");
+        String format = sdf.format(date);
+        path = path + "库存统计"+format +".xlsx";
+
+        File file= createFile(path,result);
+        HttpHeaders headers = new HttpHeaders();
+        String fileName=new String(("库存统计" + format +".xlsx").getBytes("UTF-8"),"iso-8859-1");//为了解决中文名称乱码问题
+
+        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
+                headers, HttpStatus.CREATED);
+    }
+
+    private File createFile(String path, List<ItemOut> result) throws IOException {
+        //创建新的Excel工作薄
+        SXSSFWorkbook  workbook=new SXSSFWorkbook();
+        //如果新建一个名为“sheet1”的工作表
+        SXSSFSheet sheet = workbook.createSheet("sheet1");
+        addHead(sheet);
+        addContent(sheet, result);
+
+
+        FileOutputStream fOut=new FileOutputStream(path);
+        //将数据写入Excel
+        workbook.write(fOut);
+        fOut.flush();
+        fOut.close();
+
+        return new File(path);
+    }
+
+    private void addContent(SXSSFSheet sheet, List<ItemOut> result) {
+        for(int i=0; i < result.size(); i++)
+        {
+            ItemOut itemOut = result.get(i);
+
+            SXSSFRow row=sheet.createRow(i+2);
+            SXSSFCell cell1 = row.createCell(0, XSSFCell.CELL_TYPE_STRING);
+            cell1.setCellValue(itemOut.getTypeName());
+
+            SXSSFCell cell2 = row.createCell(1, XSSFCell.CELL_TYPE_STRING);
+            cell2.setCellValue(itemOut.getName());
+
+            SXSSFCell cell3 = row.createCell(2, XSSFCell.CELL_TYPE_STRING);
+            cell3.setCellValue(itemOut.getSerialNumber());
+
+            SXSSFCell cell4 = row.createCell(3, XSSFCell.CELL_TYPE_STRING);
+            cell4.setCellValue(itemOut.getSpecifications());
+
+            SXSSFCell cell5 = row.createCell(4, XSSFCell.CELL_TYPE_NUMERIC);
+            cell5.setCellValue(itemOut.getQuantityAll());
+
+            SXSSFCell cell6 = row.createCell(5, XSSFCell.CELL_TYPE_NUMERIC);
+            cell6.setCellValue(itemOut.getQuantityUse());
+
+            SXSSFCell cell7 = row.createCell(6, XSSFCell.CELL_TYPE_NUMERIC);
+            cell7.setCellValue(itemOut.getQuantityCurrent());
+        }
+    }
+
+
+    private void addHead(SXSSFSheet sheet) {
+        SXSSFRow row=sheet.createRow(0);
+        //在索引0的位置创建单元格(左上端)
+        Cell cell=row.createCell(0);
+        //定义单元格为字符串类型
+        cell.setCellType(XSSFCell.CELL_TYPE_STRING);
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日hh时mm分ss秒");
+        String format = sdf.format(date);
+
+        //在单元格中输入一些内容
+        cell.setCellValue(format);
+
+        SXSSFRow row2=sheet.createRow(1);
+
+        SXSSFCell cell1 = row2.createCell(0, XSSFCell.CELL_TYPE_STRING);
+        cell1.setCellValue("产品类型");
+
+        SXSSFCell cell2 = row2.createCell(1, XSSFCell.CELL_TYPE_STRING);
+        cell2.setCellValue("产品名称");
+
+        SXSSFCell cell3 = row2.createCell(2, XSSFCell.CELL_TYPE_STRING);
+        cell3.setCellValue("产品编号");
+
+        SXSSFCell cell4 = row2.createCell(3, XSSFCell.CELL_TYPE_STRING);
+        cell4.setCellValue("产品规格");
+
+        SXSSFCell cell5 = row2.createCell(4, XSSFCell.CELL_TYPE_STRING);
+        cell5.setCellValue("总入库");
+
+        SXSSFCell cell6 = row2.createCell(5, XSSFCell.CELL_TYPE_STRING);
+        cell6.setCellValue("总出库");
+
+        SXSSFCell cell7 = row2.createCell(6, XSSFCell.CELL_TYPE_STRING);
+        cell7.setCellValue("当前数量");
+
     }
 }

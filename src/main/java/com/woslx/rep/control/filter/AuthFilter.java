@@ -22,7 +22,7 @@ public class AuthFilter implements Filter {
         HttpSession session = req.getSession();
 
         Object attribute = session.getAttribute("username");
-        String requestURI = req.getRequestURI();
+        String requestURI = req.getRequestURI().split("\\?")[0];
         long lastAccessedTime = session.getLastAccessedTime();
         long now = new Date().getTime();
         if(now-lastAccessedTime > session.getMaxInactiveInterval()*1000)

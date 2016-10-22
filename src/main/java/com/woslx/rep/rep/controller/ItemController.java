@@ -94,6 +94,15 @@ public class ItemController {
         item.setQuantityCurrent(0);
         item.setQuantityUse(0);
         item.setState(1);
+        Integer sort = itemService.getMaxSort();
+        if(sort ==null || sort.equals(0))
+        {
+            sort = 1;
+        }
+        else {
+            sort++;
+        }
+        item.setSort(sort);
 
         Date now = new Date();
         item.setCreateTime(now);
@@ -245,7 +254,7 @@ public class ItemController {
         }
         else {
             List<ItemOut> itemOuts = createItemOut(itemList);
-            //Collections.sort(itemOuts);
+            Collections.sort(itemOuts);
             apiResult.setData(itemOuts);
         }
 
@@ -272,6 +281,7 @@ public class ItemController {
             itemOut.setQuantityUse(item.getQuantityUse()/10.0);
             itemOut.setSerialNumber(item.getSerialNumber());
             itemOut.setSpecifications(item.getSpecifications());
+            itemOut.setSort(item.getSort());
         }
 
         return itemOuts;

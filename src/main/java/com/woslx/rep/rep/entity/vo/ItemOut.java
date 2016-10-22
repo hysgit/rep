@@ -21,6 +21,15 @@ public class ItemOut implements Comparable<ItemOut>{
     private Double quantityUse;
 
     private Double quantityCurrent;
+    private Integer sort;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public Integer getId() {
         return id;
@@ -88,23 +97,8 @@ public class ItemOut implements Comparable<ItemOut>{
 
     @Override
     public int compareTo(ItemOut o) {
-        if(this.getTypeName().compareToIgnoreCase(o.getTypeName()) > 0)
-        {
-            return -1;
-        }
-        else if(this.getTypeName().compareToIgnoreCase(o.getTypeName()) < 0)
-        {
-            return 1;
-        }
-        else {
-            if(this.getName().compareToIgnoreCase(o.getName()) != 0)
-            {
-                return this.getName().compareToIgnoreCase(o.getName());
-            }
-            else{
-                return this.getSpecifications().compareToIgnoreCase(o.getSpecifications());
-            }
-        }
+        return this.getSort() - o.getSort();
+
 
     }
 }

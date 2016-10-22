@@ -25,9 +25,19 @@ public class Item {
 
     private Integer state;
 
+    private Integer sort;
+
     private Date createTime;
 
     private Date updateTime;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public Integer getId() {
         return id;

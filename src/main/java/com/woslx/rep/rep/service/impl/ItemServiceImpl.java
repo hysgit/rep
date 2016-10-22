@@ -56,4 +56,9 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getByTypeIdAndNameIdAndSpec(Integer typeId, Integer nameId, String spec) {
         return itemDao.getByTypeIdAndNameIdAndSpec(typeId, nameId, spec);
     }
+
+    @Override
+    public Integer getMaxSort() {
+        return itemDao.getMaxSort();
+    }
 }

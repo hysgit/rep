@@ -39,10 +39,13 @@ create table if not exists item
   company varchar(30) not null comment '厂商',
   price int comment '售价，单价',
   state int not null comment '状态0,表示已删除, 1表示正常状态',
+  sort int comment '排序',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   primary key (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '商品表';
+
+alter table item add sort int comment '排序' after state;
 
 #出入库记录表
 create table if not exists records

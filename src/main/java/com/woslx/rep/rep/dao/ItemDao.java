@@ -29,4 +29,6 @@ public interface ItemDao {
     List<Item> getByTypeIdAndNameIdAndSpec(@Param("typeId") Integer typeId,
                                            @Param("nameId") Integer nameId,
                                            @Param("spec") String spec);
+
+    Integer getMaxSort();
 }

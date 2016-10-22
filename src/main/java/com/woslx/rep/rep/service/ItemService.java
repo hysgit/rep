@@ -24,4 +24,7 @@ public interface ItemService {
     Item getBySerialNumber(String serialNumber);
 
     List<Item> getByTypeIdAndNameIdAndSpec(Integer typeId, Integer nameId, String spec);
+
+    Integer getMaxSort();
+
 }

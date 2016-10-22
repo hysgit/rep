@@ -54,6 +54,8 @@
         <th><span>总入库</span></th>
         <th><span>总出库</span></th>
         <th><span>当前数量</span></th>
+        <th><span>排序</span></th>
+        <th><span></span></th>
     </tr>
     </thead>
     <tbody id="table_body">
@@ -248,7 +250,10 @@
                                     '<td>' + item.specifications + '</td>' +
                                     '<td>' + item.quantityAll + '</td>' +
                                     '<td>' + item.quantityUse + '</td>' +
-                                    '<td>' + item.quantityCurrent + '</td></tr>');
+                                    '<td>' + item.quantityCurrent + '</td>' +
+                                    '<td>' + item.sort + '</td>' +
+                                    '<td></td>' +
+                                    '</tr>');
                         }
                     }
                     else if(1000 == data.code){

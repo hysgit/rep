@@ -127,7 +127,7 @@ public class RecordsController extends BaseController {
             records.setCreateTime(date2);
             records.setUpdateTime(date2);
 
-
+            item.setUpdateTime(new Date());
             recordsService.insert(records); //保存记录
             itemService.update(item);
         }
@@ -272,6 +272,7 @@ public class RecordsController extends BaseController {
             records.setCreateTime(date2);
             records.setUpdateTime(date2);
 
+            item.setUpdateTime(new Date());
             recordsService.insert(records); //保存记录
             itemService.update(item);
         }

@@ -209,7 +209,7 @@
         state = #{state,jdbcType=INTEGER},
       </if>
       <if test="sort != null">
-        sort = #{sort,jdbcType=INTEGER}
+        sort = #{sort,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},

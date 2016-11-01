@@ -12,6 +12,7 @@ import com.woslx.rep.rep.entity.vo.ItemOut;
 import com.woslx.rep.rep.service.ItemNameService;
 import com.woslx.rep.rep.service.ItemService;
 import com.woslx.rep.rep.service.ItemTypeService;
+import com.woslx.rep.utils.filter.DistributedSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -32,16 +33,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by hy on 9/3/16.
@@ -235,8 +235,13 @@ public class ItemController {
             consumes = "application/json",
             produces = "application/json;charset=utf-8")
     @ResponseBody
-    public String getAll(@RequestBody ParamItem paramItem, HttpSession session)
-    {
+    public String getAll(@RequestBody ParamItem paramItem, HttpSession session, HttpServletRequest request) throws ParseException {
+        DistributedSession distributedSession = (DistributedSession) request.getAttribute("distributedSession");
+        System.out.println(Arrays.toString(distributedSession.getAllAttributeNames()));
+        System.out.println(distributedSession.getSessionId());
+        System.out.println(distributedSession.getCreateTime());
+        System.out.println(distributedSession.getLastAccessTime());
+        distributedSession.setAttribute(distributedSession.getSessionId() + new Date().toString(), distributedSession.getLastAccessTime().toString());
         ApiResult<List<ItemOut>> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 //        List<Item> itemList = itemService.getAll();
 

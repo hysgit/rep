@@ -248,6 +248,14 @@
                     '<input type="text" style="width:140px;"  class="form-control" id="zhuyuan_no">'
             );
         }
+        function add_dailishang()
+        {
+            $("#box1").append(
+                    '<label  for="dailishang">代理商:</label>' +
+                    '<input type="text" style="width:300px;" class="form-control" id="dailishang">'
+            );
+        }
+
 
         add_shoushu();
         add_a_new_line(i);
@@ -263,6 +271,11 @@
             {
                 add_shoushu();
             }
+            else if(value == 104)
+            {
+                add_dailishang();
+            }
+
         });
 
         $('.form_date').datetimepicker({
@@ -282,7 +295,7 @@
             var gentai_name = $("#gentai_name").val();     //跟台人
             var patient_name = $("#patient_name").val();     //病人姓名
             var zhuyuan_no = $("#zhuyuan_no").val();     //住院号
-
+            var dailishang = $("#dailishang").val();     //代理商
 
             if (itemOutType == 101) {
                 if (docterName == null || docterName == undefined || docterName == "") {
@@ -299,6 +312,13 @@
                 }
                 if (zhuyuan_no == null || zhuyuan_no == undefined || zhuyuan_no == "") {
                     alert("住院号必填");
+                    return;
+                }
+            }
+            else if(itemOutType == 104)
+            {
+                if (dailishang == null || dailishang == undefined || dailishang == "") {
+                    alert("代理商名称必填");
                     return;
                 }
             }
@@ -342,6 +362,7 @@
                 "gentaiName": gentai_name,
                 "patientName": patient_name,
                 "zhuyuanNo": zhuyuan_no,
+                "dailishang":dailishang,
                 "date": date,
                 "list": array
             };

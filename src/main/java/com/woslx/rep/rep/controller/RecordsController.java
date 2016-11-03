@@ -160,6 +160,12 @@ public class RecordsController extends BaseController {
 
         List<Out> list = paramRecordsOut.getList();
         Integer operationId = recordsService.getMaxOperationId();
+        Integer operationId104 = recordsService.getMaxOperationId104();
+        if(operationId104 == null)
+        {
+            operationId104 = 1;
+        }
+        String dailishang = paramRecordsOut.getDailishang();
         for (Out out : list) {
             Records records = new Records();
             records.setActionType(1);   // 出库
@@ -170,7 +176,7 @@ public class RecordsController extends BaseController {
                 throw new ApiException(1, "指定的商品不存在");
             }
 
-
+            //手术出库
             if (itemOutType == 101) {
                 records.setDocterName(paramRecordsOut.getDocterName());
                 records.setGentaiName(paramRecordsOut.getGentaiName());
@@ -244,11 +250,16 @@ public class RecordsController extends BaseController {
                 recordsService.insert(recordsIn); //保存记录
                 itemService.update(itemIn);
             }
+            if(itemOutType == 104)      //出库给平台
+            {
+                records.setOperationId(operationId104);
+                records.setSrcOrDst(dailishang);
+            }
+            else{
+                records.setSrcOrDst(out.getDst());
+            }
 
             records.setTime(date);
-
-            records.setSrcOrDst(out.getDst());
-
 
             records.setItemId(item.getId());
             records.setItemTypeId(item.getTypeId());
@@ -388,15 +399,15 @@ public class RecordsController extends BaseController {
             List<Integer> typeList = queryOpertionCondition.getTypeList();
 
             //1. 查询到所有在合适日期内的所有手术id,同时符合医生，跟台人
-            List<Records> zhuyuanNoList = recordsService.queryOperation(docNameList, gentaiList, typeList, start, end);
+            List<Records> operationList = recordsService.queryOperation(docNameList, gentaiList, typeList, start, end);
 
             //2. 根据住院号查询,查询一个，保存一个
-            if (zhuyuanNoList.size() == 0) {
+            if (operationList.size() == 0) {
                 apiResult.setCode(1);
                 apiResult.setMessage("未查找到记录");
                 return apiResult.toString();
             } else {
-                for (Records records : zhuyuanNoList) {
+                for (Records records : operationList) {
 
                     OpertionMsg opertionMsg = getOpertionMsgByOperationId(records.getOperationId());
                     msgList.add(opertionMsg);

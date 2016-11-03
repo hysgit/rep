@@ -37,4 +37,6 @@ public interface RecordsDao {
     List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
 
     Integer getMaxOperationId();
+
+    Integer getMaxOperationId104();
 }

@@ -127,6 +127,12 @@
     <select id="getMaxOperationId" resultType="java.lang.Integer">
         select max(operation_id)
         from records
+        where action_detail=101
+    </select>
+    <select id="getMaxOperationId104" resultType="java.lang.Integer">
+        select max(operation_id)
+        from records
+        where action_detail=104
     </select>
 
 

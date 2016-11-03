@@ -13,10 +13,19 @@ public class ParamRecordsOut {
     private String  gentaiName;
     private String  patientName;
     private String  zhuyuanNo;
+    private String dailishang;
 
     private Date date;
 
     private List<Out> list;
+
+    public String getDailishang() {
+        return dailishang;
+    }
+
+    public void setDailishang(String dailishang) {
+        this.dailishang = dailishang;
+    }
 
     public Integer getItemOutType() {
         return itemOutType;

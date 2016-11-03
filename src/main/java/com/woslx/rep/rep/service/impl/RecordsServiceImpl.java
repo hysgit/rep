@@ -70,4 +70,9 @@ public class RecordsServiceImpl implements RecordsService {
     public Integer getMaxOperationId() {
         return recordsDao.getMaxOperationId();
     }
+
+    @Override
+    public Integer getMaxOperationId104() {
+        return recordsDao.getMaxOperationId104();
+    }
 }

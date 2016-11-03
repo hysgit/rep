@@ -30,4 +30,6 @@ public interface RecordsService {
     List<Integer> getOperationIdByZhuyuanNo(String zhuyuanNO);
 
     Integer getMaxOperationId();
+
+    Integer getMaxOperationId104();
 }

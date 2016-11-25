@@ -373,6 +373,7 @@ public class RecordsController extends BaseController {
             calendar.set(Calendar.SECOND,0);
             calendar.set(Calendar.MILLISECOND,0);
             start = calendar.getTime();
+            start.setHours(0);
             calendar.setTime(end);
             calendar.set(Calendar.HOUR,0);
             calendar.set(Calendar.MINUTE,0);
@@ -380,7 +381,7 @@ public class RecordsController extends BaseController {
             calendar.set(Calendar.MILLISECOND,0);
             calendar.add(Calendar.DATE,1);
             end = calendar.getTime();
-
+            end.setHours(0);
             if (start == null || end == null) {
                 apiResult.setCode(1);
                 apiResult.setMessage("起止时间必须输入");

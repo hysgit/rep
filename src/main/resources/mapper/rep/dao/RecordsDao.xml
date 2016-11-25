@@ -60,7 +60,7 @@
         select
         <include refid="Base_Column_List"/>
         from records
-        where operation_id=#{operationId,jdbcType=INTEGER}
+        where operation_id=#{operationId,jdbcType=INTEGER} and action_detail=101
     </select>
     <select id="queryOperation" resultMap="BaseResultMap">
         select distinct a.operation_id,a.time

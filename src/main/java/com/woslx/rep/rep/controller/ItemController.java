@@ -402,8 +402,11 @@ public class ItemController {
         }
         if("admin".equals(username)) {
             SXSSFRow row = sheet.createRow(i + 2);
-            SXSSFCell cell1 = row.createCell(0, XSSFCell.CELL_TYPE_NUMERIC);
-            cell1.setCellValue(allPrice);
+            SXSSFCell cell1 = row.createCell(0, XSSFCell.CELL_TYPE_STRING);
+            cell1.setCellValue("总库存");
+
+            SXSSFCell cell2 = row.createCell(1, XSSFCell.CELL_TYPE_NUMERIC);
+            cell2.setCellValue(allPrice);
         }
     }
 

@@ -18,6 +18,15 @@ public class ParamItem {
     private String company;
 
     private Integer price;
+    private Integer basicPrice;
+
+    public Integer getBasicPrice() {
+        return basicPrice;
+    }
+
+    public void setBasicPrice(Integer basicPrice) {
+        this.basicPrice = basicPrice;
+    }
 
     public Integer getPrice() {
         return price;

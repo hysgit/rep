@@ -22,6 +22,15 @@ public class ItemOut implements Comparable<ItemOut>{
 
     private Double quantityCurrent;
     private Integer sort;
+    private Integer basicPrice;
+
+    public Integer getBasicPrice() {
+        return basicPrice;
+    }
+
+    public void setBasicPrice(Integer basicPrice) {
+        this.basicPrice = basicPrice;
+    }
 
     public Integer getSort() {
         return sort;

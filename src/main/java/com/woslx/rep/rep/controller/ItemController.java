@@ -4,6 +4,7 @@ import com.sun.rowset.internal.Row;
 import com.woslx.rep.common.ApiException;
 import com.woslx.rep.common.ApiResult;
 import com.woslx.rep.common.Constants;
+import com.woslx.rep.common.UserVO;
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.ItemName;
 import com.woslx.rep.rep.entity.ItemType;
@@ -108,6 +109,7 @@ public class ItemController {
             item.setCompany(paramItem.getCompany());
         }
         item.setPrice(paramItem.getPrice());
+        item.setBasicPrice(paramItem.getBasicPrice());
         item.setQuantityAll(0);
         item.setQuantityCurrent(0);
         item.setQuantityUse(0);
@@ -272,7 +274,8 @@ public class ItemController {
             apiResult.setMessage("查询结果为空");
         }
         else {
-            List<ItemOut> itemOuts = createItemOut(itemList);
+            String username = apiResult.getUser().getUsername();
+            List<ItemOut> itemOuts = createItemOut(itemList,username);
             session.setAttribute("result",itemOuts);
             Collections.sort(itemOuts);
             apiResult.setData(itemOuts);
@@ -281,7 +284,7 @@ public class ItemController {
         return apiResult.toString();
     }
 
-    private List<ItemOut> createItemOut(List<Item> itemList) {
+    private List<ItemOut> createItemOut(List<Item> itemList,String username) {
 
         List<ItemOut> itemOuts = new ArrayList<>();
 
@@ -302,6 +305,10 @@ public class ItemController {
             itemOut.setSerialNumber(item.getSerialNumber());
             itemOut.setSpecifications(item.getSpecifications());
             itemOut.setSort(item.getSort());
+            if(username.equals("admin"))
+            {
+                itemOut.setBasicPrice(item.getBasicPrice());
+            }
         }
 
         return itemOuts;
@@ -325,8 +332,8 @@ public class ItemController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日hh时mm分ss秒");
         String format = sdf.format(date);
         path = path + "库存统计"+format +".xlsx";
-
-        File file= createFile(path,result);
+        String username = ((String) session.getAttribute("username"));
+        File file= createFile(path,result,username);
         HttpHeaders headers = new HttpHeaders();
         String fileName=new String(("库存统计" + format +".xlsx").getBytes("UTF-8"),"iso-8859-1");//为了解决中文名称乱码问题
 
@@ -336,13 +343,13 @@ public class ItemController {
                 headers, HttpStatus.CREATED);
     }
 
-    private File createFile(String path, List<ItemOut> result) throws IOException {
+    private File createFile(String path, List<ItemOut> result,String username) throws IOException {
         //创建新的Excel工作薄
         SXSSFWorkbook  workbook=new SXSSFWorkbook();
         //如果新建一个名为“sheet1”的工作表
         SXSSFSheet sheet = workbook.createSheet("sheet1");
-        addHead(sheet);
-        addContent(sheet, result);
+        addHead(sheet, username);
+        addContent(sheet, result, username);
 
 
         FileOutputStream fOut=new FileOutputStream(path);
@@ -354,8 +361,11 @@ public class ItemController {
         return new File(path);
     }
 
-    private void addContent(SXSSFSheet sheet, List<ItemOut> result) {
-        for(int i=0; i < result.size(); i++)
+    private void addContent(SXSSFSheet sheet, List<ItemOut> result,String username) {
+
+        double allPrice = 0;
+        int i = 0;
+        for(; i < result.size(); i++)
         {
             ItemOut itemOut = result.get(i);
 
@@ -380,11 +390,25 @@ public class ItemController {
 
             SXSSFCell cell7 = row.createCell(6, XSSFCell.CELL_TYPE_NUMERIC);
             cell7.setCellValue(itemOut.getQuantityCurrent());
+
+            if("admin".equals(username)) {
+                SXSSFCell cell8 = row.createCell(7, XSSFCell.CELL_TYPE_NUMERIC);
+                cell8.setCellValue(itemOut.getBasicPrice());
+
+                SXSSFCell cell9 = row.createCell(8, XSSFCell.CELL_TYPE_NUMERIC);
+                cell9.setCellValue(itemOut.getQuantityCurrent()*itemOut.getBasicPrice());
+                allPrice = allPrice + itemOut.getQuantityCurrent()*itemOut.getBasicPrice();
+            }
+        }
+        if("admin".equals(username)) {
+            SXSSFRow row = sheet.createRow(i + 2);
+            SXSSFCell cell1 = row.createCell(0, XSSFCell.CELL_TYPE_NUMERIC);
+            cell1.setCellValue(allPrice);
         }
     }
 
 
-    private void addHead(SXSSFSheet sheet) {
+    private void addHead(SXSSFSheet sheet, String username) {
         SXSSFRow row=sheet.createRow(0);
         //在索引0的位置创建单元格(左上端)
         Cell cell=row.createCell(0);
@@ -420,6 +444,12 @@ public class ItemController {
 
         SXSSFCell cell7 = row2.createCell(6, XSSFCell.CELL_TYPE_STRING);
         cell7.setCellValue("当前数量");
+        if("admin".equals(username)) {
+            SXSSFCell cell8 = row2.createCell(7, XSSFCell.CELL_TYPE_STRING);
+            cell8.setCellValue("单价");
 
+            SXSSFCell cell9 = row2.createCell(8, XSSFCell.CELL_TYPE_STRING);
+            cell9.setCellValue("总价");
+        }
     }
 }

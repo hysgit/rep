@@ -65,8 +65,13 @@
 </div>
 
 <div class="form-group  form-inline">
-    <label for="price">产品单价: </label>
+    <label for="price">出货单价: </label>
     <input type="text" class="form-control" id="price" placeholder="必填，单位：元">
+</div>
+
+<div class="form-group  form-inline">
+    <label for="price_basic">入库单价: </label>
+    <input type="text" class="form-control" id="price_basic" placeholder="必填，单位：元">
 </div>
 
 <input id="btnSave" type="button" class="btn btn-default" value="保存"/>
@@ -148,12 +153,16 @@
 
             var price = $("#price").val().trim();
 
+            var basic_price = $("#price_basic").val().trim();
+
+
             if ((typeId == null) || (nameId == null)
                     || (serialNumber == null) || (specifications == null)
                     || (price == null)||
                     (typeId == '') || (nameId == '')
                     || (serialNumber == '') || (specifications == '')
                     || (price == '')
+                    || (basic_price == '')
             ) {
                 alert("必填参数必须全部填写");
                 return;
@@ -165,7 +174,8 @@
                 "nameId": nameId,
                 "serialNumber": serialNumber,
                 "specifications": specifications,
-                "price": price
+                "price": price,
+                "basicPrice":basic_price
             };
             if (company != null) {
                 obj.commpany = company;
@@ -190,6 +200,7 @@
                         $("#sn").val("");
                         $("#spec").val("");
                         $("#price").val("");
+                        $("#price_basic").val("");
                     }
                     else if(1000 == data.code){
                         alert(data.message);

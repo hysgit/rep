@@ -22,6 +22,7 @@ public class Item {
     private String company;
 
     private Integer price;
+    private Integer basicPrice;
 
     private Integer state;
 
@@ -30,6 +31,14 @@ public class Item {
     private Date createTime;
 
     private Date updateTime;
+
+    public Integer getBasicPrice() {
+        return basicPrice;
+    }
+
+    public void setBasicPrice(Integer basicPrice) {
+        this.basicPrice = basicPrice;
+    }
 
     public Integer getSort() {
         return sort;

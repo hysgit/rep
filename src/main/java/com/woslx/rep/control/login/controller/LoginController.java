@@ -44,11 +44,21 @@ public class LoginController {
             String userName = userLogin.getUserName();
             String password = userLogin.getPassword().toLowerCase();
             String md5 = AppUtils.MD5("wyy1314").toLowerCase();
+            String md5admin = AppUtils.MD5("xyz123").toLowerCase();
             if(userName.equals("wyy") &&(md5.equals(password)))
             {
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(1800);
                 session.setAttribute("username", "wyy");
+                apiResult.setCode(0);
+                apiResult.setMessage("登录成功");
+                apiResult.setData("/index.html?_t="+new Date().getTime());
+            }
+            else if(userName.equals("admin") &&(md5admin.equals(password)))
+            {
+                HttpSession session = request.getSession();
+                session.setMaxInactiveInterval(1800);
+                session.setAttribute("username", "admin");
                 apiResult.setCode(0);
                 apiResult.setMessage("登录成功");
                 apiResult.setData("/index.html?_t="+new Date().getTime());
@@ -76,6 +86,22 @@ public class LoginController {
         apiResult.setCode(0);
         apiResult.setMessage("注销成功");
         apiResult.setData("/statics/admin/login.html?_t="+new Date().getTime());
+
+        return apiResult.toString();
+    }
+
+    @RequestMapping(value = "/get/login",consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String getLogin() {
+
+        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+        if(apiResult.getUser() == null)
+        {
+            apiResult.setCode(1000);
+            apiResult.setMessage("未登录");
+            apiResult.setData("/statics/admin/login.html?_t="+new Date().getTime());
+        }
 
         return apiResult.toString();
     }

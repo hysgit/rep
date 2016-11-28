@@ -1,10 +1,10 @@
 package com.woslx.rep.rep.controller;
 
-import com.sun.rowset.internal.Row;
+
 import com.woslx.rep.common.ApiException;
 import com.woslx.rep.common.ApiResult;
 import com.woslx.rep.common.Constants;
-import com.woslx.rep.common.UserVO;
+
 import com.woslx.rep.rep.entity.Item;
 import com.woslx.rep.rep.entity.ItemName;
 import com.woslx.rep.rep.entity.ItemType;
@@ -86,6 +86,32 @@ public class ItemController {
 
         try {
             itemService.insert(createItem(paramItem));
+        } catch (Exception e) {
+            apiResult.setCode(1);
+            apiResult.setMessage(Constants.FAIL);
+        }
+
+        return apiResult.toString();
+    }
+
+    @RequestMapping(value = "/edit",
+            consumes = "application/json",
+            produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String edit(@RequestBody ParamItem paramItem) {
+        ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
+
+        Item item = itemService.getById(paramItem.getId());
+        if (item == null) {
+            apiResult.setCode(1);
+            apiResult.setMessage("不存在");
+            return apiResult.toString();
+        }
+        item.setBasicPrice(paramItem.getBasicPrice());
+        item.setPrice(paramItem.getPrice());
+
+        try {
+            itemService.update(item);
         } catch (Exception e) {
             apiResult.setCode(1);
             apiResult.setMessage(Constants.FAIL);
@@ -308,6 +334,7 @@ public class ItemController {
             if(username.equals("admin"))
             {
                 itemOut.setBasicPrice(item.getBasicPrice());
+                itemOut.setPrice(item.getPrice());
             }
         }
 

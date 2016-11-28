@@ -19,6 +19,15 @@ public class ParamItem {
 
     private Integer price;
     private Integer basicPrice;
+    private Integer sort;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public Integer getBasicPrice() {
         return basicPrice;

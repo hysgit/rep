@@ -248,4 +248,16 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="moveForward">
+    update item
+    set sort = sort +1
+    where sort >= #{newSort,jdbcType=INTEGER}
+    and sort &lt; #{oldSort,jdbcType=INTEGER}
+  </update>
+  <update id="moveBack">
+    update item
+    set sort = sort - 1
+    where sort > #{oldSort,jdbcType=INTEGER}
+    and sort &lt;= #{newSort,jdbcType=INTEGER}
+  </update>
 </mapper>

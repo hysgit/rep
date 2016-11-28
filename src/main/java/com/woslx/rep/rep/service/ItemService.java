@@ -27,4 +27,7 @@ public interface ItemService {
 
     Integer getMaxSort();
 
+    void moveForward(Integer newSort, Integer oldSort);
+
+    void moveBack(Integer newSort, Integer oldSort);
 }

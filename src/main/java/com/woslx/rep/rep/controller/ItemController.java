@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -98,6 +99,7 @@ public class ItemController {
             consumes = "application/json",
             produces = "application/json;charset=utf-8")
     @ResponseBody
+    @Transactional
     public String edit(@RequestBody ParamItem paramItem) {
         ApiResult<String> apiResult = new ApiResult<>(0, Constants.SUCCESS);
 
@@ -112,6 +114,24 @@ public class ItemController {
 
         try {
             itemService.update(item);
+            //更新排序
+            Integer newSort = paramItem.getSort();
+            Integer oldSort = item.getSort();
+            if(newSort > 0) {
+                if (newSort > oldSort) {
+                    //往后移动
+                    itemService.moveBack(newSort,oldSort);
+                    item.setSort(paramItem.getSort());
+                    itemService.update(item);
+                } else if (newSort < oldSort) {
+                    //往前移动
+                    itemService.moveForward(newSort,oldSort);
+                    item.setSort(paramItem.getSort());
+                    itemService.update(item);
+                }
+            }
+
+
         } catch (Exception e) {
             apiResult.setCode(1);
             apiResult.setMessage(Constants.FAIL);

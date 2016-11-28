@@ -31,4 +31,8 @@ public interface ItemDao {
                                            @Param("spec") String spec);
 
     Integer getMaxSort();
+
+    void moveForward(@Param("newSort") Integer newSort, @Param("oldSort") Integer oldSort);
+
+    void moveBack(@Param("newSort") Integer newSort, @Param("oldSort") Integer oldSort);
 }

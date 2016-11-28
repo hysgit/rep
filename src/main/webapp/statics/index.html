@@ -97,6 +97,8 @@
                     $("#modal_basicprice").val(basicPrice);
                     $("#modal_price").val(price);
                     $("#modal_text_hide").val(data.data.id);
+                    $("#modal_sort").val(data.data.sort);
+
                     $("#myModal").modal('show');
                 }
                 else if (1000 == data.code) {
@@ -365,12 +367,14 @@
         $("#submitPrice").click(function(){
             var basicPrice = $("#modal_basicprice").val();
             var price = $("#modal_price").val();
+            var item_sort = $("#modal_sort").val();
 
             var id = $("#modal_text_hide").val();
             var obj = {
                 "id":id,
                 "price":price,
-                "basicPrice":basicPrice
+                "basicPrice":basicPrice,
+                "sort":item_sort
             };
 
             $.ajax({
@@ -421,7 +425,8 @@
             </div>
             <div class="modal-body">
                 <input id="modal_text_hide" type="text" style="display:none">
-                进货价： <input id="modal_basicprice" type="text" >
+                序号： <input id="modal_sort" type="text" ><p></p>
+                进货价： <input id="modal_basicprice" type="text" ><p></p>
                 出货价：<input id="modal_price" type="text">
             </div>
             <div class="modal-footer">

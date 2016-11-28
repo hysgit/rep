@@ -61,4 +61,14 @@ public class ItemServiceImpl implements ItemService {
     public Integer getMaxSort() {
         return itemDao.getMaxSort();
     }
+
+    @Override
+    public void moveForward(Integer newSort, Integer oldSort) {
+        itemDao.moveForward(newSort,oldSort);
+    }
+
+    @Override
+    public void moveBack(Integer newSort, Integer oldSort) {
+        itemDao.moveBack(newSort,oldSort);
+    }
 }

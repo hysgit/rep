@@ -328,9 +328,9 @@
 
 //                            var edit = '<td></td>';
                             if (username == "admin") {
-                                price_basic = '<td>' + item.basicPrice + '</td>';
-                                price_basic_all ='<td>' + item.quantityCurrent * item.basicPrice + '</td>';
-                                price = '<td>' + item.price+'</td>';
+                                price_basic = '<td  id="price_basic_reset'+item.id+'">' + item.basicPrice + '</td>';
+                                price_basic_all ='<td id="price_all_reset'+item.id+'">' + item.quantityCurrent * item.basicPrice + '</td>';
+                                price = '<td id="price_reset'+item.id+'">' + item.price+'</td>';
                                 edit = '<td><button id=edit'+item.id+' class="btn btn-default btn-sm" onclick="editprice()">'+
                                     '编辑'+
                                 '</button></td>';
@@ -343,7 +343,7 @@
                                     '<td>' + item.specifications + '</td>' +
                                     '<td>' + item.quantityAll + '</td>' +
                                     '<td>' + item.quantityUse + '</td>' +
-                                    '<td>' + item.quantityCurrent + '</td>' +
+                                    '<td  id="quantity_reset'+item.id+'">' + item.quantityCurrent + '</td>' +
                                             price+
                                     price_basic +
                                     price_basic_all+
@@ -385,7 +385,10 @@
                 },
                 success: function (data) {
                     if (0 == data.code) {
-
+                        var quanlity = document.getElementById("quantity_reset"+id).innerHTML;
+                        document.getElementById("price_basic_reset"+id).innerHTML=basicPrice;
+                        document.getElementById("price_all_reset"+id).innerHTML=basicPrice * quanlity;
+                        document.getElementById("price_reset"+id).innerHTML=price;
                         $("#myModal").modal('hide');
                     }
                     else if (1000 == data.code) {
